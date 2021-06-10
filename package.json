@@ -10,7 +10,7 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:gistify.helloWorld"
+		"onStartupFinished"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -19,7 +19,32 @@
 				"command": "gistify.helloWorld",
 				"title": "Hello World"
 			}
-		]
+		],
+		"configuration": {
+			"title": "Gistify",
+			"properties": {
+				"gistify.pastebin.apiToken": {
+					"type": "string",
+					"default": "",
+					"description": "Specify Pastebin developer token for this extension to act from."
+				},
+				"gistify.pastebin.defaultUserName": {
+					"type": "string",
+					"default": "",
+					"description": "Specify user name in Pastebin to upload snippets."
+				},
+				"gistify.gists.apiToken": {
+					"type": "string",
+					"default": "",
+					"description": "Specify Github Gists api token for this extension to act from."
+				},
+				"gistify.gists.userName": {
+					"type": "string",
+					"default": "",
+					"description": "Specify Github name to upload snippets to Gists."
+				}
+			}
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
