@@ -93,3 +93,13 @@ export module UtilClasses {
     }
 
 }
+
+/*
+EXAMPLE USAGE
+
+import { UtilClasses } from './clients/util';
+
+let snippet = UtilClasses.snippetFromCurrentSelection()
+snippet.print()
+
+*/

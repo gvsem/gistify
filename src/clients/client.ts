@@ -52,3 +52,21 @@ export module Client {
     }
 
 }
+
+
+/*
+EXAMPLE USAGE
+
+import { UtilClasses } from './clients/util';
+import { Client } from './clients/client';
+import { Pastebin } from './clients/pastebin';
+
+Client.getUserPastebinClient().then((client) => {
+    client.upload(UtilClasses.snippetFromCurrentSelection(), Pastebin.Privacy.public, Pastebin.ExpireDate.oneDay).then((reference) => {
+        vscode.window.showInformationMessage(reference.getLink());
+    })
+}).catch((e) => {
+    vscode.window.showErrorMessage(e.toString())
+})
+
+*/
