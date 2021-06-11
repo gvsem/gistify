@@ -1,4 +1,5 @@
 import { UtilClasses } from './util';
+var GitHub = require('github-api');
 
 export module Gists {
 
@@ -32,7 +33,6 @@ export module Gists {
     export class Client {
     
         private apiToken: string;
-        private userToken: string | null;
         private client: typeof GitHub;
 
         constructor(apiToken : string, client : typeof GitHub) {
