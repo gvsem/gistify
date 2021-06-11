@@ -14,12 +14,6 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
-		"commands": [
-			{
-				"command": "gistify.helloWorld",
-				"title": "Hello World"
-			}
-		],
 		"configuration": {
 			"title": "Gistify",
 			"properties": {
@@ -33,6 +27,11 @@
 					"default": "",
 					"description": "Specify user name in Pastebin to upload snippets."
 				},
+				"gistify.pastebin.userToken": {
+					"type": "string",
+					"default": "",
+					"description": "Specify user token in Pastebin to upload snippets."
+				},
 				"gistify.gists.apiToken": {
 					"type": "string",
 					"default": "",
@@ -44,7 +43,13 @@
 					"description": "Specify Github name to upload snippets to Gists."
 				}
 			}
-		}
+		},
+		"commands": [
+			{
+				"command": "gistify.helloWorld",
+				"title": "Hello World"
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
