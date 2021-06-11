@@ -32,11 +32,9 @@ export module Gists {
 
     export class Client {
     
-        private apiToken: string;
         private client: typeof GitHub;
 
-        constructor(apiToken : string, client : typeof GitHub) {
-            this.apiToken = apiToken;
+        constructor(client : typeof GitHub) {
             this.client = client;
         }
 

@@ -9,7 +9,7 @@ export module Client {
         let configuration = vscode.workspace.getConfiguration("gistify.pastebin");
         let apiToken = configuration.get("apiToken", null);
         if ((apiToken === null) || (apiToken === "")) {
-            throw new Error("You need to speify apiToken in Gistify settings.");
+            throw new Error("Please, set the gistify.pastebin.apiToken setting");
         }
         return new Pastebin.Client(apiToken, null);
     }
@@ -18,7 +18,7 @@ export module Client {
         let configuration = vscode.workspace.getConfiguration("gistify.pastebin");
         let apiToken = configuration.get("apiToken", null);
         if ((apiToken === null) || (apiToken === "")) {
-            throw new Error("You need to speify apiToken in Gistify settings.");
+            throw new Error("Please, set the gistify.pastebin.apiToken setting");
         }
         var userToken = configuration.get("userToken", null);
         if ((userToken === null) || (userToken === "")) {
@@ -59,15 +59,10 @@ export module Client {
 
     export function getGistsClient() : Promise<Gists.Client> {
         let configuration = vscode.workspace.getConfiguration("gistify.gists");
-        // let apiToken = configuration.get("apiToken", null)
-        // if ((apiToken == null) || (apiToken == "")) {
-        //     throw new Error("You need to speify apiToken in Gistify settings.")
-        // }
-        let apiToken = "";
         var userToken = configuration.get("userToken", null);
 
         if ((userToken === null) || (userToken === "")) {
-            throw new Error("You need to speify apiToken in Gistify settings.");
+            throw new Error("Please, set the gistify.gists.userToken setting");
         }
 
         return new Promise((resolve, reject) => {
@@ -76,7 +71,7 @@ export module Client {
                 var client = new GitHub({
                     token: userToken
                 });
-                resolve(new Gists.Client(apiToken, client));
+                resolve(new Gists.Client(client));
             } catch (e) {
                 reject(e);
             }
