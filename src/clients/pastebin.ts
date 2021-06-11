@@ -6,14 +6,22 @@ export module Pastebin {
 
     export class Reference {
 
-        private link: string
+        private link: string;
 
         constructor(link: string) {
-            this.link = link
+            this.link = link;
         }
 
         public getLink() : string {
-            return this.link
+            return this.link;
+        }
+
+        public getId() : string {
+            var s = this.link.split('/').pop();
+            if (s !== undefined) {
+                return s;
+            }
+            throw new Error("Reference is initialized with wrong link.");
         }
 
     }
@@ -38,12 +46,12 @@ export module Pastebin {
 
     export class Client {
     
-        private apiToken: string
-        private userToken: string | null
+        private apiToken: string;
+        private userToken: string | null;
 
         constructor(apiToken : string, userToken : string | null = null) {
-            this.apiToken = apiToken
-            this.userToken = userToken
+            this.apiToken = apiToken;
+            this.userToken = userToken;
         }
 
         public static retrieveUserToken(apiToken : string, login : string, password : string) : Promise<string> {
@@ -52,26 +60,26 @@ export module Pastebin {
                 api_dev_key: apiToken,
                 api_user_name: login,
                 api_user_password: password
-            }
+            };
 
             return new Promise<string>((resolve, reject) => {
                 request.post({
                     url: 'https://pastebin.com/api/api_login.php',
                     formData: data
                 }, (err, httpResponse, body) => {
-                    console.log(body)
+                    console.log(body);
                     if (body.startsWith("Bad API request")) {
-                        reject(body)
+                        reject(body);
                     } else {
                         resolve(body);
                     }
-                })
-            })
+                });
+            });
 
         }
 
 
-        public upload(snippet : UtilClasses.Snippet, privacy : Privacy, expireDate : ExpireDate) : Promise<Reference> {
+        public upload(snippet : UtilClasses.Snippet, privacy : Pastebin.Privacy, expireDate : ExpireDate) : Promise<Reference> {
 
             var data = {
                 api_dev_key: this.apiToken,
@@ -81,10 +89,10 @@ export module Pastebin {
                 api_paste_name: snippet.getName(),
                 api_paste_code: snippet.getData(),
                 api_paste_format: snippet.getFormat()
-            }
+            };
 
-            if (this.userToken != null) {
-                data['api_user_key'] = this.userToken
+            if (this.userToken !== null) {
+                data['api_user_key'] = this.userToken;
             }
 
             return new Promise<Reference>((resolve, reject) => {
@@ -92,14 +100,14 @@ export module Pastebin {
                     url: 'https://pastebin.com/api/api_post.php',
                     formData: data
                 }, (err, httpResponse, body) => {
-                    console.log(body)
+                    console.log(body);
                     if (body.startsWith("Bad API request")) {
-                        reject(body)
+                        reject(body);
                     } else {
                         resolve(new Reference(body));
                     }
-                })
-            })
+                });
+            });
         
         }
 
