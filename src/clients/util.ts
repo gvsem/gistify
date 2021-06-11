@@ -36,6 +36,29 @@ export module UtilClasses {
 
         }
 
+        public getName() : string {
+            return this.name
+        }
+
+        public getFormat() : string {
+            return this.format
+        }
+
+        public getData() : string {
+            return this.data
+        }
+
+        public getIsFile() : boolean {
+            return this.isFile
+        }
+
+        public getFilename() : string | null {
+            if (this.isFile) {
+                return this.filename
+            }
+            return null
+        }
+
     }
 
     export function snippetFromCurrentFile() : UtilClasses.Snippet {

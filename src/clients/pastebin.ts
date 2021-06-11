@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { UtilClasses } from './util';
+let request = require("request");
 
 export module Pastebin {
 
@@ -11,6 +12,28 @@ export module Pastebin {
             this.link = link
         }
 
+        public getLink() : string {
+            return this.link
+        }
+
+    }
+
+    export enum Privacy {
+        public = 0,
+        unlisted = 1,
+        private = 2
+    }
+
+    export enum ExpireDate {
+        never = "N",
+        tenMinutes = "10M",
+        oneHour = "1H",
+        oneDay = "1D",
+        oneWeek = "1W",
+        twoWeeks = "2W",
+        oneMonth = "1M",
+        sixMonths = "6M",
+        oneYear = "1Y"
     }
 
     export class Client {
@@ -23,29 +46,61 @@ export module Pastebin {
             this.userToken = userToken
         }
 
-        public initializeWithUserCredentials(login : string, password: string) {
+        public static retrieveUserToken(apiToken : string, login : string, password : string) : Promise<string> {
             
-            
+            var data = {
+                api_dev_key: apiToken,
+                api_user_name: login,
+                api_user_password: password
+            }
+
+            return new Promise<string>((resolve, reject) => {
+                request.post({
+                    url: 'https://pastebin.com/api/api_login.php',
+                    formData: data
+                }, (err, httpResponse, body) => {
+                    console.log(body)
+                    if (body.startsWith("Bad API request")) {
+                        reject(body)
+                    } else {
+                        resolve(body);
+                    }
+                })
+            })
+
         }
 
-        public upload(snippet : UtilClasses.Snippet) : Reference {
 
-            // const response = await fetch(myUrl, {
-            //     method: 'POST',
-            //     body: content,
-            //     headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'} });
-              
-            //   if (!response.ok) { /* Handle */ }
-              
-            //   // If you care about a response:
-            //   if (response.body !== null) {
-            //     // body is ReadableStream<Uint8Array>
-            //     // parse as needed, e.g. reading directly, or
-            //     const asString = new TextDecoder("utf-8").decode(response.body);
-            //     // and further:
-            //     const asJSON = JSON.parse(asString);  // implicitly 'any', make sure to verify type on runtime.
-            //   }
-            
+        public upload(snippet : UtilClasses.Snippet, privacy : Privacy, expireDate : ExpireDate) : Promise<Reference> {
+
+            var data = {
+                api_dev_key: this.apiToken,
+                api_option: 'paste',
+                api_paste_private: privacy,
+                api_paste_expire_date: expireDate,
+                api_paste_name: snippet.getName(),
+                api_paste_code: snippet.getData(),
+                api_paste_format: snippet.getFormat()
+            }
+
+            if (this.userToken != null) {
+                data['api_user_key'] = this.userToken
+            }
+
+            return new Promise<Reference>((resolve, reject) => {
+                request.post({
+                    url: 'https://pastebin.com/api/api_post.php',
+                    formData: data
+                }, (err, httpResponse, body) => {
+                    console.log(body)
+                    if (body.startsWith("Bad API request")) {
+                        reject(body)
+                    } else {
+                        resolve(new Reference(body));
+                    }
+                })
+            })
+        
         }
 
     }
