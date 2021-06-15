@@ -13,7 +13,7 @@ export module UtilClasses {
         }
     
     };
-    
+
     export class Snippet {
 
         protected name: string;
@@ -72,8 +72,12 @@ export module UtilClasses {
 
     }
 
-    export function snippetFromCurrentFile() : UtilClasses.Snippet {
+    export function snippetFromCurrentFile() : UtilClasses.Snippet | null {
 
+        if (vscode.window.activeTextEditor === undefined) {
+            return null;
+        }
+        
         let filename = vscode.window.activeTextEditor.document.uri.path;
         let name = filename.split('\\').pop().split('/').pop();
         let format = vscode.window.activeTextEditor.document.languageId;
@@ -85,8 +89,12 @@ export module UtilClasses {
 
     }
 
-    export function snippetFromCurrentSelection() : UtilClasses.Snippet {
+    export function snippetFromCurrentSelection() : UtilClasses.Snippet | null {
 
+        if (vscode.window.activeTextEditor === undefined) {
+            return null;
+        }
+        
         let selection: vscode.Selection = vscode.window.activeTextEditor.selection;
         if (selection.isEmpty) {
             return snippetFromCurrentFile();
