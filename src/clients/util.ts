@@ -2,6 +2,18 @@ import * as vscode from 'vscode';
 
 export module UtilClasses {
 
+    export abstract class Reference {
+
+        public toJSONObject() : any {
+    
+        }
+    
+        public static fromJSONObject(json : any) : Reference | null {
+            return null;
+        }
+    
+    };
+    
     export class Snippet {
 
         protected name: string;
@@ -92,6 +104,7 @@ export module UtilClasses {
     }
 
 }
+
 
 /*
 EXAMPLE USAGE

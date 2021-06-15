@@ -42,6 +42,11 @@
 					"type": "string",
 					"default": "",
 					"description": "Specify Github token to use Gists."
+				},
+				"gistify.storage": {
+					"type": "string",
+					"default": "{}",
+					"description": "Workspace extension settings, do not edit."
 				}
 			}
 		},

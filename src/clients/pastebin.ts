@@ -4,11 +4,12 @@ let request = require("request");
 
 export module Pastebin {
 
-    export class Reference {
+    export class Reference extends UtilClasses.Reference {
 
         private link: string;
 
         constructor(link: string) {
+            super();
             this.link = link;
         }
 
@@ -22,6 +23,21 @@ export module Pastebin {
                 return s;
             }
             throw new Error("Reference is initialized with wrong link.");
+        }
+
+        public toJSONObject() : any {
+            super.toJSONObject();
+            var r = JSON.parse('{}');
+            r['link'] = this.getLink();
+            return r;
+        }
+
+        public static fromJSONObject(json : any) : Reference | null {
+            super.fromJSONObject(null);
+            if ((typeof json === 'object') && (typeof json['link'] === 'string')) {
+                return new Reference(json['link']);
+            }
+            return null;
         }
 
     }
