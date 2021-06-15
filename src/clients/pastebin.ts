@@ -1,6 +1,6 @@
-import * as vscode from 'vscode';
 import { UtilClasses } from './util';
-let request = require("request");
+import axios, { AxiosRequestConfig } from 'axios';
+import * as FormData from 'form-data';
 
 export module Pastebin {
 
@@ -49,6 +49,8 @@ export module Pastebin {
         private apiToken: string;
         private userToken: string | null;
 
+        private static api = axios.create({baseURL: 'https://pastebin.com/api/'});
+
         constructor(apiToken : string, userToken : string | null = null) {
             this.apiToken = apiToken;
             this.userToken = userToken;
@@ -62,26 +64,14 @@ export module Pastebin {
                 api_user_password: password
             };
 
-            return new Promise<string>((resolve, reject) => {
-                request.post({
-                    url: 'https://pastebin.com/api/api_login.php',
-                    formData: data
-                }, (err, httpResponse, body) => {
-                    console.log(body);
-                    if (body.startsWith("Bad API request")) {
-                        reject(body);
-                    } else {
-                        resolve(body);
-                    }
-                });
-            });
+            return this.callPostMethod('api_login.php', data);
 
         }
 
 
         public upload(snippet : UtilClasses.Snippet, privacy : Pastebin.Privacy, expireDate : ExpireDate) : Promise<Reference> {
 
-            var data = {
+            var data: any = {
                 api_dev_key: this.apiToken,
                 api_option: 'paste',
                 api_paste_private: privacy,
@@ -95,20 +85,40 @@ export module Pastebin {
                 data['api_user_key'] = this.userToken;
             }
 
-            return new Promise<Reference>((resolve, reject) => {
-                request.post({
-                    url: 'https://pastebin.com/api/api_post.php',
-                    formData: data
-                }, (err, httpResponse, body) => {
-                    console.log(body);
-                    if (body.startsWith("Bad API request")) {
-                        reject(body);
-                    } else {
+            return new Promise<Reference>((resolve) => {
+                Client.callPostMethod('api_post.php', data).then(
+                    body => {
                         resolve(new Reference(body));
                     }
-                });
+                )
             });
-        
+
+        }
+
+        private static callPostMethod(methodSuffix : string, data : any) : Promise<string> {
+            let formData = new FormData();
+
+            for (var key in data) {
+                formData.append(key, data[key]);
+            }
+
+            let config: AxiosRequestConfig = {
+                headers: {
+                    'Content-Type': `multipart/form-data; boundary=${formData.getBoundary()}`
+                }
+            };
+
+            return new Promise<string>((resolve, reject) => {
+                this.api.post<string>(methodSuffix, formData, config).then(
+                    response => {
+                        if (response.data.startsWith('Bad API request')) {
+                            reject(response.data);
+                        } else {
+                            resolve(response.data);
+                        }
+                    }
+                )
+            });
         }
 
     }
