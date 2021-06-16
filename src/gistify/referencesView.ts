@@ -1,10 +1,9 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs';
-import * as path from 'path';
-import { Gistify } from './gistify';
 import { UtilClasses } from '../clients/util';
-import { Client } from '../clients/client';
 import { Storage } from '../storage/storage';
+import { Pastebin } from '../clients/pastebin';
+import { Gists } from '../clients/gists';
+import moment = require('moment');
 
 export class NodeReferencesProvider implements vscode.TreeDataProvider<ReferenceNode> {
   constructor() {}
@@ -28,13 +27,11 @@ export class NodeReferencesProvider implements vscode.TreeDataProvider<Reference
             var treeView = Array<ReferenceNode>();
             treeView.push(new ServiceTreeItem(
                 'Pastebin',
-                '000',
                 'pastebin',
                 vscode.TreeItemCollapsibleState.Expanded
             ));
             treeView.push(new ServiceTreeItem(
                 'Gists',
-                '001',
                 'gists',
                 vscode.TreeItemCollapsibleState.Expanded
             ));
@@ -101,19 +98,13 @@ class ReferenceNode extends vscode.TreeItem {
 class ServiceTreeItem extends ReferenceNode {
     constructor(
       public readonly label: string,
-      private hint: string,
       private service: UtilClasses.Services,
       public readonly collapsibleState: vscode.TreeItemCollapsibleState
     ) {
       super(label, collapsibleState);
-      this.tooltip = `${this.label}-${this.hint}`;
-      this.description = this.hint;
     }
   
-    iconPath = {
-      light: path.join(__filename, '..', '..', 'resources', 'light', 'dependency.svg'),
-      dark: path.join(__filename, '..', '..', 'resources', 'dark', 'dependency.svg')
-    };
+    readonly iconPath = new vscode.ThemeIcon('folder');
 
     public getReferenceNodes(document : vscode.TextDocument) : Array<ReferenceTreeItem> {
         var r = Array<ReferenceTreeItem>();
@@ -133,17 +124,75 @@ class ServiceTreeItem extends ReferenceNode {
 
 export class ReferenceTreeItem extends ReferenceNode {
   constructor(
-    public readonly label: string,
-    private hint: string
+    private name: string,
+    private date: Date,
+    private link: string
   ) {
-    super(label, vscode.TreeItemCollapsibleState.None);
-    this.tooltip = `${this.label}-${this.hint}`;
-    this.description = this.hint;
+    super(name, vscode.TreeItemCollapsibleState.None);
+    this.name = name;
+    this.date = date;
+    this.link = link;
+
+    this.description = moment(date).fromNow();
+    //this.tooltip = `${this.name}\n${this.description}`;
+    //this.tooltip = `${this.name}\n${this.description}`;
   }
 
-  iconPath = {
-    light: path.join(__filename, '..', '..', 'resources', 'light', 'dependency.svg'),
-    dark: path.join(__filename, '..', '..', 'resources', 'dark', 'dependency.svg')
-  };
+  readonly contextValue = "ReferenceTreeItem";
+  readonly iconPath = new vscode.ThemeIcon('file-text');
+
+  public getLink(): string {
+    return this.link;
+  }
+
+}
+
+export class PastebinReferenceTreeItem extends ReferenceTreeItem {
+  constructor(
+    name: string,
+    date: Date,
+    link: string,
+    private privacy : Pastebin.Privacy,
+    private expire : Pastebin.ExpireDate
+  ) {
+    super(name, date, link);
+    this.privacy = privacy;
+    this.expire = expire;
+
+    if (this.privacy === 0) {
+      this.tooltip = "Public\n" + this.expire;
+    }
+    if (this.privacy === 1) {
+      this.tooltip = "Unlisted\n" + this.expire;
+    }
+    if (this.privacy === 2) {
+      this.tooltip = "Private\n" + this.expire;
+    }
+
+  }
+
+  readonly contextValue = "ReferenceTreeItem";
+  readonly iconPath = new vscode.ThemeIcon('file-text');
+
+}
+
+export class GistsReferenceTreeItem extends ReferenceTreeItem {
+  constructor(
+    name: string,
+    date: Date,
+    link: string,
+    private privacy : Gists.Privacy,
+    private descriptionSnippet : string
+  ) {
+    super(name, date, link);
+    this.privacy = privacy;
+    this.descriptionSnippet = descriptionSnippet;
+
+    this.tooltip = (this.privacy === Gists.Privacy.public ? "Public" : "Private") + "\n" + this.descriptionSnippet;
+
+  }
+
+  readonly contextValue = "ReferenceTreeItem";
+  readonly iconPath = new vscode.ThemeIcon('file-text');
 
 }

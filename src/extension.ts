@@ -7,8 +7,9 @@ import { Pastebin } from './clients/pastebin';
 import { Gists } from './clients/gists';
 import { Storage } from './storage/storage';
 import { Gistify } from './gistify/gistify';
-import { NodeReferencesProvider } from './gistify/referencesView';
+import { NodeReferencesProvider, ReferenceTreeItem } from './gistify/referencesView';
 import { getVSCodeDownloadUrl } from 'vscode-test/out/util';
+let opn = require('opn');
 
 
 
@@ -48,7 +49,6 @@ export function activate(context: vscode.ExtensionContext) {
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
 	let publishCommand = vscode.commands.registerCommand('gistify.publish', () => {
-
 
 		try {
 			
@@ -228,6 +228,23 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	context.subscriptions.push(referencesCommand);
+
+	let openReferenceTreeItemCommand = vscode.commands.registerCommand(
+		'gistify.service.openReferenceTreeItem',
+		(item: ReferenceTreeItem) => opn(item.getLink())
+	);
+
+	context.subscriptions.push(openReferenceTreeItemCommand);
+
+	let copyReferenceTreeItemLink = vscode.commands.registerCommand(
+		'gistify.service.copyReferenceTreeItemLink',
+		(item: ReferenceTreeItem) => {
+			vscode.env.clipboard.writeText(item.getLink());
+			vscode.window.showInformationMessage("Link copied to clipboard.");
+		}
+	);
+
+	context.subscriptions.push(copyReferenceTreeItemLink);
 
 }
 

@@ -63,6 +63,16 @@
 				"command": "gistify.service.refreshReferenceTable",
 				"title": "Refresh",
 				"icon": "$(refresh)"
+			},
+			{
+				"command": "gistify.service.openReferenceTreeItem",
+				"title": "Open in Browser",
+				"icon": "$(globe)"
+			},
+			{
+				"command": "gistify.service.copyReferenceTreeItemLink",
+				"title": "Copy Link Location",
+				"icon": "$(files)"
 			}
 		],
 		"viewsContainers": {
@@ -88,6 +98,18 @@
 					"command": "gistify.service.refreshReferenceTable",
 					"when": "view == nodeReferences",
 					"group": "navigation"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "gistify.service.copyReferenceTreeItemLink",
+					"group": "inline",
+					"when": "view == nodeReferences && viewItem == ReferenceTreeItem"
+				},
+				{
+					"command": "gistify.service.openReferenceTreeItem",
+					"group": "inline",
+					"when": "view == nodeReferences && viewItem == ReferenceTreeItem"
 				}
 			]
 		}
@@ -117,6 +139,7 @@
 		"axios": "^0.21.1",
 		"form-data": "^4.0.0",
 		"github-api": "^3.4.0",
+		"moment": "^2.29.1",
 		"opn": "^6.0.0"
 	}
 }

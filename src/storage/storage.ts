@@ -34,7 +34,7 @@ export class Storage {
             s[document.uri.path][this.service] = JSON.parse("[]");
         }
         var ref = reference.toJSONObject();
-        s[document.uri.path][this.service].push(ref);// = JSON.stringify(reference);
+        s[document.uri.path][this.service].unshift(ref);// = JSON.stringify(reference);
         this.updateStorage(s);
     }
 
@@ -47,18 +47,18 @@ export class Storage {
             return Array<UtilClasses.Reference>();
         }
         var r = Array<UtilClasses.Reference>();
-        for (var k in s[document.uri.path][this.service]) {
+        s[document.uri.path][this.service].forEach((k : any) => {
             var m : UtilClasses.Reference | null = null;
             if (this.service === 'pastebin') {
-                m = Pastebin.Reference.fromJSONObject(s[document.uri.path][this.service][k]);
+                m = Pastebin.Reference.fromJSONObject(k);
             } 
             if (this.service === 'gists') {
-                m = Gists.Reference.fromJSONObject(s[document.uri.path][this.service][k]);
+                m = Gists.Reference.fromJSONObject(k);
             }
             if (m !== null) {
                 r.push(m);
             }
-        }
+        });
         return r;
     }
 
