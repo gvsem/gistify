@@ -88,10 +88,12 @@ export module Pastebin {
                 api_paste_private: privacy,
                 api_paste_expire_date: expireDate,
                 api_paste_name: snippet.getName(),
-                api_paste_code: snippet.getData(),
-                api_paste_format: this.formats.includes(snippet.getFormat()) ? snippet.getFormat() : undefined
+                api_paste_code: snippet.getData()
             };
-
+            
+            if (this.formats.includes(snippet.getFormat())) {
+                data['api_paste_format'] = snippet.getFormat();
+            }
             if (this.userToken !== null) {
                 data['api_user_key'] = this.userToken;
             }
