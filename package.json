@@ -53,11 +53,24 @@
 		"commands": [
 			{
 				"command": "gistify.publish",
-				"title": "Gistify: Upload to remote bin (Pastebin/Gists)..."
+				"title": "Gistify: Upload to remote bin (Pastebin/Gists)...",
+				"icon": "$(cloud-upload)"
 			},
 			{
-				"command": "gistify.references",
-				"title": "Gistify: Show published references of this snippet."
+				"command": "gistify.publish.pastebin.anonymous",
+				"title": "Gistify: Upload to Pastebin anonymously..."
+			},
+			{
+				"command": "gistify.publish.pastebin",
+				"title": "Gistify: Upload to Pastebin..."
+			},
+			{
+				"command": "gistify.publish.gists",
+				"title": "Gistify: Upload to Gists..."
+			},
+			{
+				"command": "gistify.publishSelection",
+				"title": "Gistify: Upload selection to remote bin (Pastebin/Gists)..."
 			},
 			{
 				"command": "gistify.service.refreshReferenceTable",
@@ -92,10 +105,21 @@
 				}
 			]
 		},
+		"viewsWelcome": [
+			{
+			  "view": "nodeReferences",
+			  "contents": "No references found.\n[Publish...](command:gistify.publish)\n[Publish to Pastebin anonymously...](command:gistify.publish.pastebin.anonymous)\n[Publish to Pastebin...](command:gistify.publish.pastebin)\n[Publish to Gists...](command:gistify.publish.gists)"
+			}
+		  ],
 		"menus": {
 			"view/title": [
 				{
 					"command": "gistify.service.refreshReferenceTable",
+					"when": "view == nodeReferences",
+					"group": "navigation"
+				},
+				{
+					"command": "gistify.publish",
 					"when": "view == nodeReferences",
 					"group": "navigation"
 				}
@@ -111,8 +135,33 @@
 					"group": "inline",
 					"when": "view == nodeReferences && viewItem == ReferenceTreeItem"
 				}
-			]
-		}
+			],
+			"explorer/context": [
+				  {
+					"command": "gistify.publish",
+					"group": "7_modification"
+				  }
+			],
+			"editor/context": [
+				{
+					"command": "gistify.publishSelection",
+					"group": "z_commands",
+					"when": "editorHasSelection"
+				},
+				{
+					"command": "gistify.publish",
+					"group": "z_commands"
+				}
+		  ]
+		},
+		"keybindings": [
+			{
+			  "command": "gistify.publish",
+			  "key": "ctrl+alt+u",
+			  "mac": "cmd+opt+u",
+			  "when": "editorIsOpen"
+			}
+		  ]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
