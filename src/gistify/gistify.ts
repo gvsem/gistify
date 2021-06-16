@@ -241,8 +241,13 @@ export module Gistify {
         return vscode.window.showQuickPick(pasteBinPrivacy, {title: "Specify Pastebin privacy:"}).then((selection: IterableQuickPick | undefined) => {
             if (selection !== undefined) {
                 privacy = selection.i;
+            } else {
+                return Promise.resolve();
             }
         }).then(() => {
+            if (privacy === -1) {
+                return Promise.resolve();
+            }
             vscode.window.showQuickPick(pasteBinExpire, {title: "Specify Pastebin expire date:"}).then((selection: vscode.QuickPickItem | undefined) => {
                 if (selection !== undefined) {
                     var exp = selection.label as Pastebin.ExpireDate;
@@ -278,8 +283,13 @@ export module Gistify {
         return vscode.window.showQuickPick(gistsPrivacy, {title: "Specify Gists privacy:"}).then((selection: IterableQuickPick | undefined) => {
             if (selection !== undefined) {
                 privacy = selection.i;
+            } else {
+                return Promise.resolve();
             }
         }).then(() => {
+            if (privacy === -1) {
+                return Promise.resolve();
+            }
             vscode.window.showInputBox({title: "Optionally: specify description for this gist."}).then((description: string | undefined) => {
                 if (description !== undefined) {
                     Gistify.Publish.toGists(d!, wholeFile, (privacy === 0 ? Gists.Privacy.public : Gists.Privacy.private), description!);
