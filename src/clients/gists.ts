@@ -54,7 +54,7 @@ export module Gists {
         }
 
         public getReferenceTreeItem() : ReferenceTreeItem | null {
-            return new ReferenceTreeItem(this.name, this.date, this.getLink());
+            return new GistsReferenceTreeItem(this.name, this.date, this.getLink(), this.privacy, this.description);
         }
 
     }

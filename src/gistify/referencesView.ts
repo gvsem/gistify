@@ -131,7 +131,7 @@ export class ReferenceTreeItem extends ReferenceNode {
     this.link = link;
 
     this.description = moment(date).fromNow();
-    this.tooltip = `${this.name}\n${this.description}`;
+    //this.tooltip = `${this.name}\n${this.description}`;
     //this.tooltip = `${this.name}\n${this.description}`;
   }
 
