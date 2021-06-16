@@ -117,6 +117,9 @@ class ServiceTreeItem extends ReferenceNode {
 
     public getReferenceNodes(document : vscode.TextDocument) : Array<ReferenceTreeItem> {
         var r = Array<ReferenceTreeItem>();
+        if (document.isUntitled) {
+            return r;
+        }
         new Storage(this.service).getReferences(document).forEach((value, index) => {
             var l = value.getReferenceTreeItem();
             if (l !== null) {

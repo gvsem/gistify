@@ -114,6 +114,15 @@ export module UtilClasses {
 
     }
 
+    export function isSelectionEmpty() : boolean {
+        if (vscode.window.activeTextEditor === undefined) {
+            return false;
+        }
+        
+        let selection: vscode.Selection = vscode.window.activeTextEditor.selection;
+        return selection.isEmpty;
+    }
+
 }
 
 

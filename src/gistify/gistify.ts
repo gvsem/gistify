@@ -75,7 +75,7 @@ export module Gistify {
                         if (snippet!.getIsFile() && !document.isUntitled) {
                             new Storage('pastebin').addReference(document, reference);
                         } else {
-                            vscode.window.showWarningMessage("Publihed snippet is not tracked.\nUnknown files and selections can not be tracked.", "OK");
+                            vscode.window.showWarningMessage("Publihed snippet is not tracked.\nUnknown, unworkspaced files and selections can not be tracked.", "OK");
                         }
                     }).catch((e : Error) => {
                         vscode.window.showErrorMessage(e.toString());
@@ -118,7 +118,7 @@ export module Gistify {
                         if (snippet!.getIsFile() && !document.isUntitled) {
                             new Storage('gists').addReference(document, reference);
                         } else {
-                            vscode.window.showWarningMessage("Publihed snippet is not tracked.\nUnknown files and selections can not be tracked.", "OK");
+                            vscode.window.showWarningMessage("Publihed snippet is not tracked.\nUnknown, unworkspaced files and selections can not be tracked.", "OK");
                         }
                     }).catch((e : Error) => {
                         vscode.window.showErrorMessage(e.toString());

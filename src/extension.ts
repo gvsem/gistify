@@ -32,6 +32,10 @@ export function activate(context: vscode.ExtensionContext) {
 	  nodeDependenciesProvider.refresh();
 	});
 
+	vscode.window.onDidChangeActiveTextEditor(() => {
+		vscode.commands.executeCommand('gistify.service.refreshReferenceTable');
+	});
+
 	// vscode.workspace.onDidSaveTextDocument((e: vscode.TextDocument) => {
 	// 	new Storage('pastebin').notifySaved(e);
 	// });
@@ -50,7 +54,7 @@ export function activate(context: vscode.ExtensionContext) {
 			
 			let d = vscode.window.activeTextEditor?.document;
 			if (d === undefined) {
-				return;
+				throw new Error("No current document.");
 			}
 
 			let services : Array<IterableQuickPick> = [
@@ -72,11 +76,11 @@ export function activate(context: vscode.ExtensionContext) {
 			let fileOrSelection : Array<IterableQuickPick> = [
                 {
                     label: "Publish whole file",
-                    description: "",
+                    description: "Publish " + UtilClasses.snippetFromCurrentFile(d)?.getName(),
                     i: 0
                 }, {
                     label: "Publish selection",
-                    description: "",
+                    description: "Snippet from current document selection",
                     i: 1
                 }
             ];
@@ -95,15 +99,15 @@ export function activate(context: vscode.ExtensionContext) {
 
 
 			let pasteBinExpire : Array<vscode.QuickPickItem> = [
-                { label: "N",description: ""},
-				{ label: "10M",description: ""},
-				{ label: "1H",description: ""},
-				{ label: "1D",description: ""},
-				{ label: "1W",description: ""},
-				{ label: "2W",description: ""},
-				{ label: "1M",description: ""},
-				{ label: "6M",description: ""},
-				{ label: "1Y",description: ""},
+                { label: "N",description: "Will be kept forever."},
+				{ label: "10M",description: "10 minutes"},
+				{ label: "1H",description: "1 hour"},
+				{ label: "1D",description: "1 day"},
+				{ label: "1W",description: "1 week"},
+				{ label: "2W",description: "2 weeks"},
+				{ label: "1M",description: "1 month"},
+				{ label: "6M",description: "6 months"},
+				{ label: "1Y",description: "1 year"},
             ];
 
 			let gistsPrivacy : Array<IterableQuickPick> = [
@@ -121,13 +125,17 @@ export function activate(context: vscode.ExtensionContext) {
 			var i = -1;
 			var publishFile = -1;
 			var privacy = -1;
-			vscode.window.showQuickPick(services).then((selection: IterableQuickPick | undefined) => {
+			vscode.window.showQuickPick(services, {title: "Select service to publish service:"}).then((selection: IterableQuickPick | undefined) => {
 				if (selection !== undefined) {
 					i = selection.i;
 				}
 			}).then(() => {
 				
-				vscode.window.showQuickPick(fileOrSelection).then((selection: IterableQuickPick | undefined) => {
+				var selectionPromise = vscode.window.showQuickPick(fileOrSelection, {title: "Select snippet source:"});
+				if (UtilClasses.isSelectionEmpty()) {
+					selectionPromise = Promise.resolve(fileOrSelection[0]);
+				}
+				selectionPromise.then((selection: IterableQuickPick | undefined) => {
 					if (selection !== undefined) {
 						publishFile = selection.i;
 					}
@@ -136,17 +144,17 @@ export function activate(context: vscode.ExtensionContext) {
 					if (i === 1) {
 						pasteBinPrivacy.push({
 							label: "Private",
-							description: "",
+							description: "For user " + vscode.workspace.getConfiguration("gistify.pastebin").get('defaultUserName'),
 							i: 2
 						});
 					}
 					if ((i === 0) || (i === 1)) {
-						vscode.window.showQuickPick(pasteBinPrivacy).then((selection: IterableQuickPick | undefined) => {
+						vscode.window.showQuickPick(pasteBinPrivacy, {title: "Specify Pastebin privacy:"}).then((selection: IterableQuickPick | undefined) => {
 							if (selection !== undefined) {
 								privacy = selection.i;
 							}
 						}).then(() => {
-							vscode.window.showQuickPick(pasteBinExpire).then((selection: vscode.QuickPickItem | undefined) => {
+							vscode.window.showQuickPick(pasteBinExpire, {title: "Specify Pastebin expire date:"}).then((selection: vscode.QuickPickItem | undefined) => {
 								if (selection !== undefined) {
 									var exp = selection.label as Pastebin.ExpireDate;
 									Gistify.Publish.toPastebin(d!, publishFile === 1, i === 0, privacy, exp);
@@ -155,12 +163,12 @@ export function activate(context: vscode.ExtensionContext) {
 						});
 					}
 					if (i === 2) {
-						vscode.window.showQuickPick(gistsPrivacy).then((selection: IterableQuickPick | undefined) => {
+						vscode.window.showQuickPick(gistsPrivacy, {title: "Specify Gists privacy:"}).then((selection: IterableQuickPick | undefined) => {
 							if (selection !== undefined) {
 								privacy = selection.i;
 							}
 						}).then(() => {
-							vscode.window.showInputBox().then((description: string | undefined) => {
+							vscode.window.showInputBox({title: "Optionally: specify description for this gist."}).then((description: string | undefined) => {
 								if (description !== undefined) {
 									Gistify.Publish.toGists(d!, publishFile === 1, (privacy === 0 ? Gists.Privacy.public : Gists.Privacy.private), description!);
 								}
