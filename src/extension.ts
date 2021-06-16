@@ -39,22 +39,75 @@ export function activate(context: vscode.ExtensionContext) {
 	// The commandId parameter must match the command field in package.json
 
 
-	// let publishPastebinCommand = vscode.commands.registerCommand('gistify.publish.pastebin.', () => {
+	let publishPastebinAnonymousCommand = vscode.commands.registerCommand('gistify.publish.pastebin.anonymous', () => {
 
-	// });
+		try {
+			
+			let d = vscode.window.activeTextEditor?.document;
+			if ((d === undefined) || (d.getText() === '')) {
+				throw new Error("No current document.");
+			}
 
-	// let publishGistsCommand = vscode.commands.registerCommand('gistify.publish.gists', () => {
+			Gistify.selectSource().then((fromFile: boolean) => {
+				Gistify.publishPastebin(d!, fromFile, true).then(() => {
 
-	// });
+				});
+			});
+		} catch (e : any) {
+			vscode.window.showErrorMessage(e.toString());
+		}
 
-	// context.subscriptions.push(publishGistsCommand, publishPastebinCommand);
+	});
+
+	let publishPastebinCommand = vscode.commands.registerCommand('gistify.publish.pastebin', () => {
+
+		try {
+			
+			let d = vscode.window.activeTextEditor?.document;
+			if ((d === undefined) || (d.getText() === '')) {
+				throw new Error("No current document.");
+			}
+
+			Gistify.selectSource().then((fromFile: boolean) => {
+				Gistify.publishPastebin(d!, fromFile, false).then(() => {
+
+				});
+			});
+		} catch (e : any) {
+			vscode.window.showErrorMessage(e.toString());
+		}
+
+	});
+
+	let publishGistsCommand = vscode.commands.registerCommand('gistify.publish.gists', () => {
+
+		try {
+			
+			let d = vscode.window.activeTextEditor?.document;
+			if ((d === undefined) || (d.getText() === '')) {
+				throw new Error("No current document.");
+			}
+
+			Gistify.selectSource().then((fromFile: boolean) => {
+					Gistify.publishGists(d!, fromFile).then(() => {
+
+					});
+			});
+
+		} catch (e : any) {
+			vscode.window.showErrorMessage(e.toString());
+		}
+
+	});
+
+	context.subscriptions.push(publishGistsCommand, publishPastebinCommand, publishPastebinAnonymousCommand);
 
 	let publishCommand = vscode.commands.registerCommand('gistify.publish', () => {
 
 		try {
 			
 			let d = vscode.window.activeTextEditor?.document;
-			if (d === undefined) {
+			if ((d === undefined) || (d.getText() === '')) {
 				throw new Error("No current document.");
 			}
 
@@ -89,7 +142,7 @@ export function activate(context: vscode.ExtensionContext) {
 		try {
 			
 			let d = vscode.window.activeTextEditor?.document;
-			if (d === undefined) {
+			if ((d === undefined) || (d.getText() === '')) {
 				throw new Error("No current document.");
 			}
 

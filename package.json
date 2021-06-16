@@ -56,6 +56,10 @@
 				"title": "Gistify: Upload to remote bin (Pastebin/Gists)..."
 			},
 			{
+				"command": "gistify.publish.pastebin.anonymous",
+				"title": "Gistify: Upload to Pastebin anonymously..."
+			},
+			{
 				"command": "gistify.publish.pastebin",
 				"title": "Gistify: Upload to Pastebin..."
 			},
@@ -103,7 +107,7 @@
 		"viewsWelcome": [
 			{
 			  "view": "nodeReferences",
-			  "contents": "No references found.\n[Publish](command:gistify.publish)"
+			  "contents": "No references found.\n[Publish...](command:gistify.publish)\n[Publish to Pastebin anonymously...](command:gistify.publish.pastebin.anonymous)\n[Publish to Pastebin...](command:gistify.publish.pastebin)\n[Publish to Gists...](command:gistify.publish.gists)"
 			}
 		  ],
 		"menus": {

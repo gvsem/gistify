@@ -198,7 +198,12 @@ export module Gistify {
     }
     
     export function publishPastebin(d : vscode.TextDocument, wholeFile : boolean, anonymous : boolean) : Thenable<void> {
-            
+           
+        if (d.getText() === "") {
+            vscode.window.showErrorMessage('Empty document.');
+            return Promise.resolve();
+        }
+
         let pasteBinPrivacy : Array<IterableQuickPick> = [
             {
                 label: "Public",
@@ -251,6 +256,11 @@ export module Gistify {
     
     export function publishGists(d : vscode.TextDocument, wholeFile : boolean) : Thenable<void> {
     
+        if (d.getText() === "") {
+            vscode.window.showErrorMessage('Empty document.');
+            return Promise.resolve();
+        }
+
         let gistsPrivacy : Array<IterableQuickPick> = [
             {
                 label: "Public",
