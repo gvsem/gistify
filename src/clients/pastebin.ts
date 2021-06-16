@@ -1,15 +1,26 @@
+import * as vscode from 'vscode';
+import { PastebinReferenceTreeItem, ReferenceTreeItem } from '../gistify/referencesView';
 import { UtilClasses } from './util';
 import axios, { AxiosRequestConfig } from 'axios';
 import * as FormData from 'form-data';
 
 export module Pastebin {
 
-    export class Reference {
+    export class Reference extends UtilClasses.Reference {
 
+        private name: string;
         private link: string;
+        private date: Date;
+        private privacy : Pastebin.Privacy;
+        private expire : Pastebin.ExpireDate;
 
-        constructor(link: string) {
+        constructor(name: string, link: string, date: Date, privacy : Pastebin.Privacy, expire : Pastebin.ExpireDate) {
+            super();
+            this.name = name;
             this.link = link;
+            this.date = date !== undefined ? date : new Date();
+            this.privacy = privacy;
+            this.expire = expire;
         }
 
         public getLink() : string {
@@ -22,6 +33,25 @@ export module Pastebin {
                 return s;
             }
             throw new Error("Reference is initialized with wrong link.");
+        }
+
+        public toJSONObject() : any {
+            super.toJSONObject();
+            var r = JSON.parse('{}');
+            r['name'] = this.name;
+            r['link'] = this.getLink();
+            r['date'] = this.date.toJSON();
+            r['privacy'] = this.privacy;
+            r['expire'] = this.expire;
+            return r;
+        }
+
+        public static fromJSONObject(json : any) : Reference {
+            return new Pastebin.Reference(json['name'], json['link'], new Date(json['date']), json['privacy'], json['expire']);
+        }
+
+        public getReferenceTreeItem() : ReferenceTreeItem | null {
+            return new PastebinReferenceTreeItem(this.name, this.date, this.getLink(), this.privacy, this.expire);
         }
 
     }
@@ -90,7 +120,7 @@ export module Pastebin {
             return new Promise<Reference>((resolve, reject) => {
                 Client.callPostMethod('api_post.php', data).then(
                     body => {
-                        resolve(new Reference(body));
+                        resolve(new Pastebin.Reference(snippet.getName(), body, new Date(), privacy, expireDate));
                     }
                 ).catch(e => reject(e));
             });
