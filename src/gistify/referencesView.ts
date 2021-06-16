@@ -108,8 +108,7 @@ export class ReferenceTreeItem extends ReferenceNode {
     this.link = link;
 
     this.description = moment(date).fromNow();
-    //this.tooltip = `${this.name}\n${this.description}`;
-    //this.tooltip = `${this.name}\n${this.description}`;
+    this.tooltip = `${this.name}\n${date.toJSON()}`;
   }
 
   readonly contextValue = "ReferenceTreeItem";
@@ -133,15 +132,19 @@ export class PastebinReferenceTreeItem extends ReferenceTreeItem {
     this.privacy = privacy;
     this.expire = expire;
 
+    let privacyLine = '';
+
     if (this.privacy === 0) {
-      this.tooltip = "Public\n" + this.expire;
+      privacyLine = 'Privacy: public';
+    } else if (this.privacy === 1) {
+      privacyLine = 'Privacy: unlisted';
+    } else if (this.privacy === 2) {
+      privacyLine = 'Privacy: private';
     }
-    if (this.privacy === 1) {
-      this.tooltip = "Unlisted\n" + this.expire;
-    }
-    if (this.privacy === 2) {
-      this.tooltip = "Private\n" + this.expire;
-    }
+
+    this.tooltip += '\n\n';
+    this.tooltip += privacyLine + '\n';
+    this.tooltip += 'Expiry time: ' + this.expire + '\n';
 
   }
 
@@ -162,7 +165,9 @@ export class GistsReferenceTreeItem extends ReferenceTreeItem {
     this.privacy = privacy;
     this.descriptionSnippet = descriptionSnippet;
 
-    this.tooltip = (this.privacy === Gists.Privacy.public ? "Public" : "Private") + "\n" + this.descriptionSnippet;
+    this.tooltip += '\n\n';
+    this.tooltip += 'Privacy: ' + (this.privacy === Gists.Privacy.public ? "public" : "private") + '\n';
+    this.tooltip += 'Description: ' + this.descriptionSnippet + '\n';
 
   }
 

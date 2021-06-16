@@ -34,8 +34,6 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	setInterval(refreshReferenceTable, 60 * 1000);
-
-
 	  
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
