@@ -192,7 +192,7 @@ export class GistsReferenceTreeItem extends ReferenceTreeItem {
     this.descriptionSnippet = descriptionSnippet;
 
     this.tooltip += '\n\n';
-    this.tooltip += 'Privacy: ' + (Gists.Privacy.public ? "public" : "private") + '\n';
+    this.tooltip += 'Privacy: ' + (this.privacy === Gists.Privacy.public ? "public" : "private") + '\n';
     this.tooltip += 'Description: ' + this.descriptionSnippet + '\n';
 
   }
