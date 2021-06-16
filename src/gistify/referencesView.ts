@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import { UtilClasses } from '../clients/util';
 import { Storage } from '../storage/storage';
+import { Pastebin } from '../clients/pastebin';
+import { Gists } from '../clients/gists';
 
 export class NodeReferencesProvider implements vscode.TreeDataProvider<ReferenceNode> {
   constructor() {}
@@ -119,9 +121,9 @@ class ServiceTreeItem extends ReferenceNode {
 
 export class ReferenceTreeItem extends ReferenceNode {
   constructor(
-    private name: string,
-    private date: string,
-    private link: string
+    protected name: string,
+    protected date: string,
+    protected link: string
   ) {
     super(name, vscode.TreeItemCollapsibleState.None);
     this.name = name;
@@ -129,7 +131,69 @@ export class ReferenceTreeItem extends ReferenceNode {
     this.link = link;
 
     this.description = date;
-    this.tooltip = `${this.name}\n${this.description}`;
+    //this.tooltip = `${this.name}\n${this.description}`;
+  }
+
+  readonly contextValue = "ReferenceTreeItem";
+  readonly iconPath = new vscode.ThemeIcon('file-text');
+
+  public getLink(): string {
+    return this.link;
+  }
+
+}
+
+export class PastebinReferenceTreeItem extends ReferenceTreeItem {
+  constructor(
+    name: string,
+    date: string,
+    link: string,
+    private privacy : Pastebin.Privacy,
+    private expire : Pastebin.ExpireDate
+  ) {
+    super(name, date, link);
+    this.privacy = privacy;
+    this.expire = expire;
+
+    this.description = date;
+    //this.tooltip = `${this.name}\n${this.description}`;
+    if (this.privacy === 0) {
+      this.tooltip = "Public\n" + this.expire;
+    }
+    if (this.privacy === 1) {
+      this.tooltip = "Unlisted\n" + this.expire;
+    }
+    if (this.privacy === 2) {
+      this.tooltip = "Private\n" + this.expire;
+    }
+
+  }
+
+  readonly contextValue = "ReferenceTreeItem";
+  readonly iconPath = new vscode.ThemeIcon('file-text');
+
+  public getLink(): string {
+    return this.link;
+  }
+
+}
+
+export class GistsReferenceTreeItem extends ReferenceTreeItem {
+  constructor(
+    name: string,
+    date: string,
+    link: string,
+    private privacy : Gists.Privacy,
+    private descriptionSnippet : string
+  ) {
+    super(name, date, link);
+    this.privacy = privacy;
+    this.descriptionSnippet = descriptionSnippet;
+
+    this.description = date;
+    //this.tooltip = `${this.name}\n${this.description}`;
+    this.tooltip = (this.privacy === Gists.Privacy.public ? "Public" : "Private") + "\n" + this.descriptionSnippet;
+
   }
 
   readonly contextValue = "ReferenceTreeItem";

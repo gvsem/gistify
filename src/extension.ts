@@ -46,7 +46,6 @@ export function activate(context: vscode.ExtensionContext) {
 	// The commandId parameter must match the command field in package.json
 	let publishCommand = vscode.commands.registerCommand('gistify.publish', () => {
 
-
 		try {
 			
 			let d = vscode.window.activeTextEditor?.document;
