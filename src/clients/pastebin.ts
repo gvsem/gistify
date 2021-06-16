@@ -85,12 +85,12 @@ export module Pastebin {
                 data['api_user_key'] = this.userToken;
             }
 
-            return new Promise<Reference>((resolve) => {
+            return new Promise<Reference>((resolve, reject) => {
                 Client.callPostMethod('api_post.php', data).then(
                     body => {
                         resolve(new Reference(body));
                     }
-                )
+                ).catch(e => reject(e));
             });
 
         }
@@ -110,14 +110,16 @@ export module Pastebin {
 
             return new Promise<string>((resolve, reject) => {
                 this.api.post<string>(methodSuffix, formData, config).then(
-                    response => {
-                        if (response.data.startsWith('Bad API request')) {
-                            reject(response.data);
+                    response => resolve(response.data)
+                ).catch(
+                    error => {
+                        if (error.response) {
+                            reject(new Error(error.response.data));
                         } else {
-                            resolve(response.data);
+                            reject(error);
                         }
                     }
-                )
+                );
             });
         }
 

@@ -26,21 +26,25 @@ export function activate(context: vscode.ExtensionContext) {
 		// let snippet = UtilClasses.snippetFromCurrentSelection()
 		// snippet.print()
 
-		// var clientPromise = Client.getAnonymousPastebinClient()
+		// var clientPromise = Client.getAnonymousPastebinClient();
 		// или
-		// var clientPromise = Client.getUserPastebinClient()
+		// var clientPromise = Client.getUserPastebinClient();
 
 		// clientPromise.then((client) => {
 		// 	client.upload(
 		// 		UtilClasses.snippetFromCurrentSelection(),
 		// 		Pastebin.Privacy.public,
 		// 		Pastebin.ExpireDate.oneDay,
-		// 	).then((reference) => {
+		// 	)
+		// 	.then((reference) => {
 		// 		vscode.window.showInformationMessage(reference.getLink());
 		// 	})
+		// 	.catch((e) => {
+		// 		vscode.window.showErrorMessage(e.toString());
+		// 	});
 		// }).catch((e) => {
-		// 	vscode.window.showErrorMessage(e.toString())
-		// })
+		// 	vscode.window.showErrorMessage(e.toString());
+		// });
 
 		// Client.getGistsClient().then((client) => {
 		// 	client.upload(UtilClasses.snippetFromCurrentSelection(), Gists.Privacy.private, "test gist").then((reference) => {
