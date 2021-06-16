@@ -53,11 +53,11 @@
 		"commands": [
 			{
 				"command": "gistify.publish",
-				"title": "Publish snippet to bin..."
+				"title": "Gistify: Upload to remote bin (Pastebin/Gists)..."
 			},
 			{
 				"command": "gistify.references",
-				"title": "Show published references of this snippet."
+				"title": "Gistify: Show published references of this snippet."
 			},
 			{
 				"command": "gistify.service.refreshReferenceTable",
