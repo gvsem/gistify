@@ -25,13 +25,16 @@ export function activate(context: vscode.ExtensionContext) {
 	const nodeDependenciesProvider = new NodeReferencesProvider();
 	vscode.window.registerTreeDataProvider('nodeReferences', nodeDependenciesProvider);
 
-	vscode.commands.registerCommand('gistify.service.refreshReferenceTable', () => {
-	  nodeDependenciesProvider.refresh();
-	});
+	let refreshReferenceTable = () => nodeDependenciesProvider.refresh();
+	
+	vscode.commands.registerCommand('gistify.service.refreshReferenceTable', refreshReferenceTable);
 
 	vscode.window.onDidChangeActiveTextEditor(() => {
 		vscode.commands.executeCommand('gistify.service.refreshReferenceTable');
 	});
+
+	setInterval(refreshReferenceTable, 60 * 1000);
+
 
 	  
 	// The command has been defined in the package.json file
