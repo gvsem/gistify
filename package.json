@@ -53,7 +53,8 @@
 		"commands": [
 			{
 				"command": "gistify.publish",
-				"title": "Gistify: Upload to remote bin (Pastebin/Gists)..."
+				"title": "Gistify: Upload to remote bin (Pastebin/Gists)...",
+				"icon": "$(cloud-upload)"
 			},
 			{
 				"command": "gistify.publish.pastebin.anonymous",
@@ -114,6 +115,11 @@
 			"view/title": [
 				{
 					"command": "gistify.service.refreshReferenceTable",
+					"when": "view == nodeReferences",
+					"group": "navigation"
+				},
+				{
+					"command": "gistify.publish",
 					"when": "view == nodeReferences",
 					"group": "navigation"
 				}
