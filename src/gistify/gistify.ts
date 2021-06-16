@@ -77,6 +77,8 @@ export module Gistify {
                         } else {
                             vscode.window.showWarningMessage("Publihed snippet is not tracked.\nUnknown files and selections can not be tracked.", "OK");
                         }
+                    }).catch((e : Error) => {
+                        vscode.window.showErrorMessage(e.toString());
                     });
 
                 }).catch((e : Error) => {
@@ -118,6 +120,8 @@ export module Gistify {
                         } else {
                             vscode.window.showWarningMessage("Publihed snippet is not tracked.\nUnknown files and selections can not be tracked.", "OK");
                         }
+                    }).catch((e : Error) => {
+                        vscode.window.showErrorMessage(e.toString());
                     });
 
                 }).catch((e : Error) => {

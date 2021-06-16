@@ -140,11 +140,6 @@ export function activate(context: vscode.ExtensionContext) {
 						});
 					}
 					if ((i === 0) || (i === 1)) {
-						pasteBinPrivacy.push({
-							label: "Private",
-							description: "",
-							i: 2
-						});
 						vscode.window.showQuickPick(pasteBinPrivacy).then((selection: IterableQuickPick | undefined) => {
 							if (selection !== undefined) {
 								privacy = selection.i;
@@ -152,7 +147,8 @@ export function activate(context: vscode.ExtensionContext) {
 						}).then(() => {
 							vscode.window.showQuickPick(pasteBinExpire).then((selection: vscode.QuickPickItem | undefined) => {
 								if (selection !== undefined) {
-									Gistify.Publish.toPastebin(d!, publishFile === 1, i === 0, privacy, Pastebin.ExpireDate[selection.label as keyof typeof Pastebin.ExpireDate]);
+									var exp = selection.label as Pastebin.ExpireDate;
+									Gistify.Publish.toPastebin(d!, publishFile === 1, i === 0, privacy, exp);
 								}
 							});
 						});
@@ -176,42 +172,42 @@ export function activate(context: vscode.ExtensionContext) {
 
 
 			//Gistify.Publish.
-		} catch (e : Error) {
+		} catch (e : any) {
 			vscode.window.showErrorMessage(e.toString());
 		}
 
 
 
-		var snippet = UtilClasses.snippetFromCurrentSelection();
-		if (snippet === null) {
-			return;
-		}
-		var d = vscode.window.activeTextEditor!;
+		// var snippet = UtilClasses.snippetFromCurrentSelection();
+		// if (snippet === null) {
+		// 	return;
+		// }
+		// var d = vscode.window.activeTextEditor!;
 
-		Client.getUserPastebinClient().then((client : Pastebin.Client) => {
-			client.upload(snippet!, Pastebin.Privacy.public, Pastebin.ExpireDate.oneDay).then((reference : Pastebin.Reference) => {
-				vscode.window.showInformationMessage("File/selection has been published at " + reference.getLink(), ...["Open link..."]).then((value : string | undefined) => {
-					if (value === "Open link...") {
-						opn(reference.getLink());
-					}
-				});
-				if (snippet!.getIsFile() && !d.document.isUntitled) {
-					// Promise.resolve(new Storage('pastebin').addReference(d.document, reference)).then(() => {
-					// 	vscode.commands.executeCommand('gistify.service.refreshReferenceTable');
-					// });
-					new Storage('pastebin').addReference(d.document, reference);
-					//vscode.commands.executeCommand('gistify.service.refreshReferenceTable');
-				} else {
-					vscode.window.showWarningMessage("Publihed snippet is not tracked. $(gist) -Unknown files and selections can not be tracked.", "OK").then((value : string | undefined) => {
-						if (value === 'OK') {
+		// Client.getUserPastebinClient().then((client : Pastebin.Client) => {
+		// 	client.upload(snippet!, Pastebin.Privacy.public, Pastebin.ExpireDate.oneDay).then((reference : Pastebin.Reference) => {
+		// 		vscode.window.showInformationMessage("File/selection has been published at " + reference.getLink(), ...["Open link..."]).then((value : string | undefined) => {
+		// 			if (value === "Open link...") {
+		// 				opn(reference.getLink());
+		// 			}
+		// 		});
+		// 		if (snippet!.getIsFile() && !d.document.isUntitled) {
+		// 			// Promise.resolve(new Storage('pastebin').addReference(d.document, reference)).then(() => {
+		// 			// 	vscode.commands.executeCommand('gistify.service.refreshReferenceTable');
+		// 			// });
+		// 			new Storage('pastebin').addReference(d.document, reference);
+		// 			//vscode.commands.executeCommand('gistify.service.refreshReferenceTable');
+		// 		} else {
+		// 			vscode.window.showWarningMessage("Publihed snippet is not tracked. $(gist) -Unknown files and selections can not be tracked.", "OK").then((value : string | undefined) => {
+		// 				if (value === 'OK') {
 						
-						}
-					});
-				}
-			});
-		}).catch((e : Error) => {
-			vscode.window.showErrorMessage(e.toString());
-		});
+		// 				}
+		// 			});
+		// 		}
+		// 	});
+		// }).catch((e : Error) => {
+		// 	vscode.window.showErrorMessage(e.toString());
+		// });
 
 	});
 
