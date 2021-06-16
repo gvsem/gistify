@@ -16,6 +16,8 @@ export class NodeReferencesProvider implements vscode.TreeDataProvider<Reference
 
     return new Promise((accept) => {
 
+
+
         let editor = vscode.window.activeTextEditor;
         if (editor === undefined) {
             accept([]);
@@ -24,7 +26,7 @@ export class NodeReferencesProvider implements vscode.TreeDataProvider<Reference
         let d = editor.document;
 
         if (element === undefined) {
-            var treeView = Array<ReferenceNode>();
+            var treeView = Array<ServiceTreeItem>();
             treeView.push(new ServiceTreeItem(
                 'Pastebin',
                 'pastebin',
@@ -35,6 +37,10 @@ export class NodeReferencesProvider implements vscode.TreeDataProvider<Reference
                 'gists',
                 vscode.TreeItemCollapsibleState.Expanded
             ));
+            if ((treeView[0].getReferenceNodes(d).length === 0) && (treeView[1].getReferenceNodes(d).length === 0)) {
+              accept([]);
+              return;
+            }
             accept(treeView);
         }
 
@@ -44,38 +50,6 @@ export class NodeReferencesProvider implements vscode.TreeDataProvider<Reference
         }
 
         return;
-
-
-        var treeView = Array<ReferenceNode>();
-        
-        if (vscode.window.activeTextEditor === undefined) {
-            vscode.window.showInformationMessage('No snippets published yet.');
-            //accept(treeView);
-        }   
-
-        accept(treeView);
-        return;
-        
-        // let d = vscode.window.activeTextEditor.document;
-
-        // if (element) {
-        // //   return Promise.resolve(
-        // //     this.getDepsInPackageJson(
-        // //       path.join(this.workspaceRoot, 'node_modules', element.label, 'package.json')
-        // //     )
-        // //   );
-        //     Gistify.References.getGists(d).forEach((value) => {
-        //         treeView[0].
-        //     });
-        // } else {
-        // const packageJsonPath = path.join(this.workspaceRoot, 'package.json');
-        // if (this.pathExists(packageJsonPath)) {
-        //     return Promise.resolve(this.getDepsInPackageJson(packageJsonPath));
-        // } else {
-        //     vscode.window.showInformationMessage('Workspace has no package.json');
-        //     return Promise.resolve([]);
-        // }
-        // }
 
     });
   }

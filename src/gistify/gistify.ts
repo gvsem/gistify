@@ -139,7 +139,146 @@ export module Gistify {
 
 
 
-
+    interface IterableQuickPick extends vscode.QuickPickItem {
+        i: number
+    }
+    
+    export function selectService() : Thenable<number> {
+        let services : Array<IterableQuickPick> = [
+            {
+                label: "Pastebin (anonymous)",
+                description: "",
+                i: 0
+            }, {
+                label: "Pastebin",
+                description: "",
+                i: 1
+            }, {
+                label: "Gists",
+                description: "",
+                i: 2
+            }
+        ];
+        return new Promise<number>((accept, reject) => {
+            vscode.window.showQuickPick(services, {title: "Select service to publish:"}).then((selection: IterableQuickPick | undefined) => {
+                if (selection !== undefined) {
+                    accept(selection.i);
+                } else{
+                    reject(-1);
+                }
+            });
+        });
+    }
+    
+    export function selectSource() : Thenable<boolean> {
+        let fileOrSelection : Array<IterableQuickPick> = [
+            {
+                label: "Publish whole file",
+                description: "Publish current opened file", // + UtilClasses.snippetFromCurrentFile(d)?.getName(),
+                i: 0
+            }, {
+                label: "Publish selection",
+                description: "Snippet from current document selection",
+                i: 1
+            }
+        ];
+        return new Promise<boolean>((accept, reject) => {
+            var selectionPromise = vscode.window.showQuickPick(fileOrSelection, {title: "Select snippet source:"});
+            if (UtilClasses.isSelectionEmpty()) {
+                selectionPromise = Promise.resolve(fileOrSelection[0]);
+            }
+            selectionPromise.then((selection: IterableQuickPick | undefined) => {
+                if (selection !== undefined) {
+                    accept(selection.i === 0);
+                } else {
+                    reject(true);
+                }
+            });
+        });
+    }
+    
+    export function publishPastebin(d : vscode.TextDocument, wholeFile : boolean, anonymous : boolean) : Thenable<void> {
+            
+        let pasteBinPrivacy : Array<IterableQuickPick> = [
+            {
+                label: "Public",
+                description: "",
+                i: 0
+            }, {
+                label: "Unlisted",
+                description: "",
+                i: 1
+            }
+        ];
+    
+        let pasteBinExpire : Array<vscode.QuickPickItem> = [
+            { label: "N",description: "Will be kept forever."},
+            { label: "10M",description: "10 minutes"},
+            { label: "1H",description: "1 hour"},
+            { label: "1D",description: "1 day"},
+            { label: "1W",description: "1 week"},
+            { label: "2W",description: "2 weeks"},
+            { label: "1M",description: "1 month"},
+            { label: "6M",description: "6 months"},
+            { label: "1Y",description: "1 year"},
+        ];
+    
+        var privacy = -1;
+    
+        if (!anonymous) {
+            pasteBinPrivacy.push({
+                label: "Private",
+                description: "For user " + vscode.workspace.getConfiguration("gistify.pastebin").get('defaultUserName'),
+                i: 2
+            });
+        }
+    
+        return vscode.window.showQuickPick(pasteBinPrivacy, {title: "Specify Pastebin privacy:"}).then((selection: IterableQuickPick | undefined) => {
+            if (selection !== undefined) {
+                privacy = selection.i;
+            }
+        }).then(() => {
+            vscode.window.showQuickPick(pasteBinExpire, {title: "Specify Pastebin expire date:"}).then((selection: vscode.QuickPickItem | undefined) => {
+                if (selection !== undefined) {
+                    var exp = selection.label as Pastebin.ExpireDate;
+                    Gistify.Publish.toPastebin(d!, wholeFile, anonymous, privacy, exp);
+                }
+            });
+        });
+    
+    }
+    
+    
+    export function publishGists(d : vscode.TextDocument, wholeFile : boolean) : Thenable<void> {
+    
+        let gistsPrivacy : Array<IterableQuickPick> = [
+            {
+                label: "Public",
+                description: "",
+                i: 0
+            }, {
+                label: "Private",
+                description: "",
+                i: 1
+            }
+        ];
+    
+        var privacy = -1;
+    
+        return vscode.window.showQuickPick(gistsPrivacy, {title: "Specify Gists privacy:"}).then((selection: IterableQuickPick | undefined) => {
+            if (selection !== undefined) {
+                privacy = selection.i;
+            }
+        }).then(() => {
+            vscode.window.showInputBox({title: "Optionally: specify description for this gist."}).then((description: string | undefined) => {
+                if (description !== undefined) {
+                    Gistify.Publish.toGists(d!, wholeFile, (privacy === 0 ? Gists.Privacy.public : Gists.Privacy.private), description!);
+                }
+            });
+        });
+    
+    }
+    
 
 
 
