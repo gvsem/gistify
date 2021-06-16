@@ -114,8 +114,9 @@
 		"vscode-test": "^1.5.2"
 	},
 	"dependencies": {
+		"axios": "^0.21.1",
+		"form-data": "^4.0.0",
 		"github-api": "^3.4.0",
-		"opn": "^6.0.0",
-		"axios": "^0.21.1"
+		"opn": "^6.0.0"
 	}
 }
