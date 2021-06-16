@@ -42,15 +42,55 @@
 					"type": "string",
 					"default": "",
 					"description": "Specify Github token to use Gists."
+				},
+				"gistify.storage": {
+					"type": "string",
+					"default": "{}",
+					"description": "Workspace extension settings, do not edit."
 				}
 			}
 		},
 		"commands": [
 			{
-				"command": "gistify.helloWorld",
-				"title": "Hello World"
+				"command": "gistify.publish",
+				"title": "Gistify: Upload to remote bin (Pastebin/Gists)..."
+			},
+			{
+				"command": "gistify.references",
+				"title": "Gistify: Show published references of this snippet."
+			},
+			{
+				"command": "gistify.service.refreshReferenceTable",
+				"title": "Refresh",
+				"icon": "$(refresh)"
 			}
-		]
+		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "nodeReferencesView",
+					"title": "Gistify",
+					"icon": "$(gist)"
+				}
+			]
+		},
+		"views": {
+			"nodeReferencesView": [
+				{
+					"id": "nodeReferences",
+					"name": "Snippet References"
+				}
+			]
+		},
+		"menus": {
+			"view/title": [
+				{
+					"command": "gistify.service.refreshReferenceTable",
+					"when": "view == nodeReferences",
+					"group": "navigation"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
@@ -76,6 +116,7 @@
 	"dependencies": {
 		"axios": "^0.21.1",
 		"form-data": "^4.0.0",
-		"github-api": "^3.4.0"
+		"github-api": "^3.4.0",
+		"opn": "^6.0.0"
 	}
 }

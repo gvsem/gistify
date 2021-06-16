@@ -1,6 +1,25 @@
 import * as vscode from 'vscode';
+import {ReferenceTreeItem} from '../gistify/referencesView';
 
 export module UtilClasses {
+
+    export type Services = 'pastebin' | 'gists';
+
+    export abstract class Reference {
+
+        public toJSONObject() : any {
+    
+        }
+    
+        public static fromJSONObject(json : any) : Reference | null {
+            return null;
+        }
+
+        public getReferenceTreeItem() : ReferenceTreeItem | null {
+            return null;
+        }
+    
+    };
 
     export class Snippet {
 
@@ -60,39 +79,43 @@ export module UtilClasses {
 
     }
 
-    export function snippetFromCurrentFile() : UtilClasses.Snippet {
-        let editor = vscode.window.activeTextEditor!
-        let filename = editor.document.uri.path;
-        let name = filename.split('\\').pop()!.split('/').pop()!;
-        let format = editor.document.languageId;
-        let data = editor.document.getText();
+    export function snippetFromCurrentFile(document: vscode.TextDocument) : UtilClasses.Snippet | null {
 
-        let snippet = new UtilClasses.Snippet(name, format, data);
+        let filename = document.uri.path;
+        let name = filename.split('\\').pop()?.split('/').pop();
+        let format = document.languageId;
+        let data = document.getText();
+
+        let snippet = new UtilClasses.Snippet(name!, format, data);
         snippet.initAsFile(filename);
         return snippet;
 
     }
 
-    export function snippetFromCurrentSelection() : UtilClasses.Snippet {
+    export function snippetFromCurrentSelection(document: vscode.TextDocument) : UtilClasses.Snippet | null {
 
-        let selection: vscode.Selection = vscode.window.activeTextEditor!.selection;
+        if (vscode.window.activeTextEditor === undefined) {
+            return null;
+        }
+        
+        let selection: vscode.Selection = vscode.window.activeTextEditor.selection;
         if (selection.isEmpty) {
-            return snippetFromCurrentFile();
+            return snippetFromCurrentFile(document);
         }
 
-        let editor = vscode.window.activeTextEditor!
-        let filename = editor.document.uri.path;
-        let name = filename.split('\\').pop()!.split('/').pop()!;
-        let format = editor.document.languageId;
+        let filename = document.uri.path;
+        let name = filename.split('\\').pop()?.split('/').pop();
+        let format = document.languageId;
 
         let range = new vscode.Range(selection.start, selection.end);
-        let data = editor.document.getText(range);
+        let data = document.getText(range);
 
-        return new UtilClasses.Snippet(name, format, data);
+        return new UtilClasses.Snippet(name!, format, data);
 
     }
 
 }
+
 
 /*
 EXAMPLE USAGE
