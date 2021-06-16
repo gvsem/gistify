@@ -61,11 +61,11 @@ export module UtilClasses {
     }
 
     export function snippetFromCurrentFile() : UtilClasses.Snippet {
-
-        let filename = vscode.window.activeTextEditor.document.uri.path;
-        let name = filename.split('\\').pop().split('/').pop();
-        let format = vscode.window.activeTextEditor.document.languageId;
-        let data = vscode.window.activeTextEditor.document.getText();
+        let editor = vscode.window.activeTextEditor!
+        let filename = editor.document.uri.path;
+        let name = filename.split('\\').pop()!.split('/').pop()!;
+        let format = editor.document.languageId;
+        let data = editor.document.getText();
 
         let snippet = new UtilClasses.Snippet(name, format, data);
         snippet.initAsFile(filename);
@@ -75,17 +75,18 @@ export module UtilClasses {
 
     export function snippetFromCurrentSelection() : UtilClasses.Snippet {
 
-        let selection: vscode.Selection = vscode.window.activeTextEditor.selection;
+        let selection: vscode.Selection = vscode.window.activeTextEditor!.selection;
         if (selection.isEmpty) {
             return snippetFromCurrentFile();
         }
 
-        let filename = vscode.window.activeTextEditor.document.uri.path;
-        let name = filename.split('\\').pop().split('/').pop();
-        let format = vscode.window.activeTextEditor.document.languageId;
+        let editor = vscode.window.activeTextEditor!
+        let filename = editor.document.uri.path;
+        let name = filename.split('\\').pop()!.split('/').pop()!;
+        let format = editor.document.languageId;
 
         let range = new vscode.Range(selection.start, selection.end);
-        let data = vscode.window.activeTextEditor.document.getText(range);
+        let data = editor.document.getText(range);
 
         return new UtilClasses.Snippet(name, format, data);
 
