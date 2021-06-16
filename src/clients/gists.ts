@@ -77,14 +77,14 @@ export module Gists {
 
                 gist.create(data).then((data: string) => {
                     return gist.read();
-                }).then((data: string) => {
+                }).then((data: any) => {
                     console.log(data);
                     if (data['status'] == 200) {
                         resolve(new Reference(data['data']['html_url']));
                     } else {
                         reject(new Error(data['statusText'] + " / " + data["data"]));
                     }
-                }).catch((e) => {
+                }).catch((e: any) => {
                     reject(e);
                 });
 

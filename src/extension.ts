@@ -20,6 +20,7 @@ interface IterableQuickPick extends vscode.QuickPickItem {
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
+
 	// vscode.window.createTreeView('nodeReferences', {
 	// 	treeDataProvider: new NodeReferencesProvider()
 	// });
@@ -244,20 +245,31 @@ export function deactivate() {}
 		// console.log(s.getReferences(d));
 
 
-		//let snippet = UtilClasses.snippetFromCurrentSelection()
-		//snippet.print()
+		// let snippet = UtilClasses.snippetFromCurrentSelection()
+		// snippet.print()
 
-		//var client = Client.getAnonymousPastebinClient()
-		// Client.getUserPastebinClient().then((client) => {
-		// 	client.upload(UtilClasses.snippetFromCurrentSelection(), Pastebin.Privacy.public, Pastebin.ExpireDate.oneDay).then((reference) => {
+		// var clientPromise = Client.getAnonymousPastebinClient();
+		// или
+		// var clientPromise = Client.getUserPastebinClient();
+
+		// clientPromise.then((client) => {
+		// 	client.upload(
+		// 		UtilClasses.snippetFromCurrentSelection(),
+		// 		Pastebin.Privacy.public,
+		// 		Pastebin.ExpireDate.oneDay,
+		// 	)
+		// 	.then((reference) => {
 		// 		vscode.window.showInformationMessage(reference.getLink());
 		// 	})
+		// 	.catch((e) => {
+		// 		vscode.window.showErrorMessage(e.toString());
+		// 	});
 		// }).catch((e) => {
-		// 	vscode.window.showErrorMessage(e.toString())
-		// })
+		// 	vscode.window.showErrorMessage(e.toString());
+		// });
 
 		// Client.getGistsClient().then((client) => {
-		// 	client.upload(UtilClasses.snippetFromCurrentSelection(), Gists.Privacy.public, "test gist").then((reference) => {
+		// 	client.upload(UtilClasses.snippetFromCurrentSelection(), Gists.Privacy.private, "test gist").then((reference) => {
 		// 		vscode.window.showInformationMessage(reference.getLink());
 		// 	}).catch((e) => {
 		// 		vscode.window.showErrorMessage(e.toString());

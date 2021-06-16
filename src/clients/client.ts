@@ -5,13 +5,14 @@ var GitHub = require('github-api');
 
 export module Client {
 
-    export function getAnonymousPastebinClient() : Pastebin.Client {
+    export function getAnonymousPastebinClient() : Promise<Pastebin.Client> {
         let configuration = vscode.workspace.getConfiguration("gistify.pastebin");
         let apiToken = configuration.get("apiToken", null);
         if ((apiToken === null) || (apiToken === "")) {
             throw new Error("Please, set the gistify.pastebin.apiToken setting");
         }
-        return new Pastebin.Client(apiToken, null);
+        // return new Pastebin.Client(apiToken, null);
+        return new Promise((resolve) => resolve(new Pastebin.Client(apiToken!, null)))
     }
 
     export function getUserPastebinClient() : Promise<Pastebin.Client> {
@@ -51,7 +52,7 @@ export module Client {
             });
         }
 
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             resolve(new Pastebin.Client(apiToken!, userToken));
         });
 
