@@ -51,7 +51,7 @@ export module Pastebin {
         }
 
         public getReferenceTreeItem() : ReferenceTreeItem | null {
-            return new PastebinReferenceTreeItem(this.name, this.date.toJSON(), this.getLink(), this.privacy, this.expire);
+            return new PastebinReferenceTreeItem(this.name, this.date, this.getLink(), this.privacy, this.expire);
         }
 
     }

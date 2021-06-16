@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
 import { UtilClasses } from '../clients/util';
 import { Storage } from '../storage/storage';
 import { Pastebin } from '../clients/pastebin';
 import { Gists } from '../clients/gists';
+import moment = require('moment');
 
 export class NodeReferencesProvider implements vscode.TreeDataProvider<ReferenceNode> {
   constructor() {}
@@ -121,16 +121,17 @@ class ServiceTreeItem extends ReferenceNode {
 
 export class ReferenceTreeItem extends ReferenceNode {
   constructor(
-    protected name: string,
-    protected date: string,
-    protected link: string
+    private name: string,
+    private date: Date,
+    private link: string
   ) {
     super(name, vscode.TreeItemCollapsibleState.None);
     this.name = name;
     this.date = date;
     this.link = link;
 
-    this.description = date;
+    this.description = moment(date).fromNow();
+    this.tooltip = `${this.name}\n${this.description}`;
     //this.tooltip = `${this.name}\n${this.description}`;
   }
 
@@ -146,7 +147,7 @@ export class ReferenceTreeItem extends ReferenceNode {
 export class PastebinReferenceTreeItem extends ReferenceTreeItem {
   constructor(
     name: string,
-    date: string,
+    date: Date,
     link: string,
     private privacy : Pastebin.Privacy,
     private expire : Pastebin.ExpireDate
@@ -155,8 +156,6 @@ export class PastebinReferenceTreeItem extends ReferenceTreeItem {
     this.privacy = privacy;
     this.expire = expire;
 
-    this.description = date;
-    //this.tooltip = `${this.name}\n${this.description}`;
     if (this.privacy === 0) {
       this.tooltip = "Public\n" + this.expire;
     }
@@ -172,16 +171,12 @@ export class PastebinReferenceTreeItem extends ReferenceTreeItem {
   readonly contextValue = "ReferenceTreeItem";
   readonly iconPath = new vscode.ThemeIcon('file-text');
 
-  public getLink(): string {
-    return this.link;
-  }
-
 }
 
 export class GistsReferenceTreeItem extends ReferenceTreeItem {
   constructor(
     name: string,
-    date: string,
+    date: Date,
     link: string,
     private privacy : Gists.Privacy,
     private descriptionSnippet : string
@@ -190,17 +185,11 @@ export class GistsReferenceTreeItem extends ReferenceTreeItem {
     this.privacy = privacy;
     this.descriptionSnippet = descriptionSnippet;
 
-    this.description = date;
-    //this.tooltip = `${this.name}\n${this.description}`;
     this.tooltip = (this.privacy === Gists.Privacy.public ? "Public" : "Private") + "\n" + this.descriptionSnippet;
 
   }
 
   readonly contextValue = "ReferenceTreeItem";
   readonly iconPath = new vscode.ThemeIcon('file-text');
-
-  public getLink(): string {
-    return this.link;
-  }
 
 }

@@ -34,7 +34,7 @@ export class Storage {
             s[document.uri.path][this.service] = JSON.parse("[]");
         }
         var ref = reference.toJSONObject();
-        s[document.uri.path][this.service].push(ref);// = JSON.stringify(reference);
+        s[document.uri.path][this.service].unshift(ref);// = JSON.stringify(reference);
         this.updateStorage(s);
     }
 
