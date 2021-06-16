@@ -1,3 +1,4 @@
+import { ReferenceTreeItem } from '../gistify/referencesView';
 import { UtilClasses } from './util';
 var GitHub = require('github-api');
 
@@ -37,6 +38,10 @@ export module Gists {
                 return new Reference(json['link']);
             }
             return null;
+        }
+
+        public getReferenceTreeItem() : ReferenceTreeItem | null {
+            return new ReferenceTreeItem('Gists Ref', this.getLink());
         }
 
     }

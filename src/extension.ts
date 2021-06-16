@@ -5,23 +5,248 @@ import { UtilClasses } from './clients/util';
 import { Client } from './clients/client';
 import { Pastebin } from './clients/pastebin';
 import { Gists } from './clients/gists';
+import { Storage } from './storage/storage';
+import { Gistify } from './gistify/gistify';
+import { NodeReferencesProvider } from './gistify/referencesView';
+import { getVSCodeDownloadUrl } from 'vscode-test/out/util';
+
+
+
+interface IterableQuickPick extends vscode.QuickPickItem {
+	i: number
+}
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-	
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "gistify" is now active!');
 
+	// vscode.window.createTreeView('nodeReferences', {
+	// 	treeDataProvider: new NodeReferencesProvider()
+	// });
+
+	const nodeDependenciesProvider = new NodeReferencesProvider();
+	vscode.window.registerTreeDataProvider('nodeReferences', nodeDependenciesProvider);
+
+	vscode.commands.registerCommand('gistify.service.refreshReferenceTable', () => {
+	  nodeDependenciesProvider.refresh();
+	});
+
+	// vscode.workspace.onDidSaveTextDocument((e: vscode.TextDocument) => {
+	// 	new Storage('pastebin').notifySaved(e);
+	// });
+
+	//vscode.window.t
+
+	//vscode.window.work
+	  
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('gistify.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		
-		vscode.window.showInformationMessage('Hello World from Gistify!');
+	let publishCommand = vscode.commands.registerCommand('gistify.publish', () => {
+
+
+		try {
+			
+			let d = vscode.window.activeTextEditor?.document;
+			if (d === undefined) {
+				return;
+			}
+
+			let services : Array<IterableQuickPick> = [
+                {
+                    label: "Pastebin (anonymous)",
+                    description: "",
+                    i: 0
+                }, {
+                    label: "Pastebin",
+                    description: "",
+                    i: 1
+                }, {
+                    label: "Gists",
+                    description: "",
+                    i: 2
+                }
+            ];
+
+			let fileOrSelection : Array<IterableQuickPick> = [
+                {
+                    label: "Publish whole file",
+                    description: "",
+                    i: 0
+                }, {
+                    label: "Publish selection",
+                    description: "",
+                    i: 1
+                }
+            ];
+
+			let pasteBinPrivacy : Array<IterableQuickPick> = [
+                {
+                    label: "Public",
+                    description: "",
+                    i: 0
+                }, {
+                    label: "Unlisted",
+                    description: "",
+                    i: 1
+                }
+            ];
+
+
+			let pasteBinExpire : Array<vscode.QuickPickItem> = [
+                { label: "N",description: ""},
+				{ label: "10M",description: ""},
+				{ label: "1H",description: ""},
+				{ label: "1D",description: ""},
+				{ label: "1W",description: ""},
+				{ label: "2W",description: ""},
+				{ label: "1M",description: ""},
+				{ label: "6M",description: ""},
+				{ label: "1Y",description: ""},
+            ];
+
+			let gistsPrivacy : Array<IterableQuickPick> = [
+                {
+                    label: "Public",
+                    description: "",
+                    i: 0
+                }, {
+                    label: "Private",
+                    description: "",
+                    i: 1
+                }
+            ];
+
+			var i = -1;
+			var publishFile = -1;
+			var privacy = -1;
+			vscode.window.showQuickPick(services).then((selection: IterableQuickPick | undefined) => {
+				if (selection !== undefined) {
+					i = selection.i;
+				}
+			}).then(() => {
+				
+				vscode.window.showQuickPick(fileOrSelection).then((selection: IterableQuickPick | undefined) => {
+					if (selection !== undefined) {
+						publishFile = selection.i;
+					}
+				}).then(() => {
+				
+					if (i === 1) {
+						pasteBinPrivacy.push({
+							label: "Private",
+							description: "",
+							i: 2
+						});
+					}
+					if ((i === 0) || (i === 1)) {
+						pasteBinPrivacy.push({
+							label: "Private",
+							description: "",
+							i: 2
+						});
+						vscode.window.showQuickPick(pasteBinPrivacy).then((selection: IterableQuickPick | undefined) => {
+							if (selection !== undefined) {
+								privacy = selection.i;
+							}
+						}).then(() => {
+							vscode.window.showQuickPick(pasteBinExpire).then((selection: vscode.QuickPickItem | undefined) => {
+								if (selection !== undefined) {
+									Gistify.Publish.toPastebin(d!, publishFile === 1, i === 0, privacy, Pastebin.ExpireDate[selection.label as keyof typeof Pastebin.ExpireDate]);
+								}
+							});
+						});
+					}
+					if (i === 2) {
+						vscode.window.showQuickPick(gistsPrivacy).then((selection: IterableQuickPick | undefined) => {
+							if (selection !== undefined) {
+								privacy = selection.i;
+							}
+						}).then(() => {
+							vscode.window.showInputBox().then((description: string | undefined) => {
+								if (description !== undefined) {
+									Gistify.Publish.toGists(d!, publishFile === 1, (privacy === 0 ? Gists.Privacy.public : Gists.Privacy.private), description!);
+								}
+							});
+						});
+					}
+
+				});
+			});
+
+
+			//Gistify.Publish.
+		} catch (e : Error) {
+			vscode.window.showErrorMessage(e.toString());
+		}
+
+
+
+		var snippet = UtilClasses.snippetFromCurrentSelection();
+		if (snippet === null) {
+			return;
+		}
+		var d = vscode.window.activeTextEditor!;
+
+		Client.getUserPastebinClient().then((client : Pastebin.Client) => {
+			client.upload(snippet!, Pastebin.Privacy.public, Pastebin.ExpireDate.oneDay).then((reference : Pastebin.Reference) => {
+				vscode.window.showInformationMessage("File/selection has been published at " + reference.getLink(), ...["Open link..."]).then((value : string | undefined) => {
+					if (value === "Open link...") {
+						opn(reference.getLink());
+					}
+				});
+				if (snippet!.getIsFile() && !d.document.isUntitled) {
+					// Promise.resolve(new Storage('pastebin').addReference(d.document, reference)).then(() => {
+					// 	vscode.commands.executeCommand('gistify.service.refreshReferenceTable');
+					// });
+					new Storage('pastebin').addReference(d.document, reference);
+					//vscode.commands.executeCommand('gistify.service.refreshReferenceTable');
+				} else {
+					vscode.window.showWarningMessage("Publihed snippet is not tracked. $(gist) -Unknown files and selections can not be tracked.", "OK").then((value : string | undefined) => {
+						if (value === 'OK') {
+						
+						}
+					});
+				}
+			});
+		}).catch((e : Error) => {
+			vscode.window.showErrorMessage(e.toString());
+		});
+
+	});
+
+	context.subscriptions.push(publishCommand);
+
+	let referencesCommand = vscode.commands.registerCommand('gistify.references', () => {
+
+
+	});
+
+	context.subscriptions.push(referencesCommand);
+
+}
+
+// this method is called when your extension is deactivated
+export function deactivate() {}
+
+
+
+
+
+
+
+
+
+// var s : Storage = new Storage('pastebin');
+		// var d = vscode.window.activeTextEditor.document!;
+		// console.log(d.uri);
+		// console.log(d.fileName);
+		// s.addReference(d, new Pastebin.Reference("alalal"));
+
+		// console.log(s.getReferences(d));
+		// //s.deleteAllReferences(d);
+		// console.log(s.getReferences(d));
+
 
 		//let snippet = UtilClasses.snippetFromCurrentSelection()
 		//snippet.print()
@@ -44,11 +269,3 @@ export function activate(context: vscode.ExtensionContext) {
 		// }).catch((e) => {
 		// 	vscode.window.showErrorMessage(e.toString());
 		// });
-
-	});
-
-	context.subscriptions.push(disposable);
-}
-
-// this method is called when your extension is deactivated
-export function deactivate() {}

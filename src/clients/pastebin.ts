@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { ReferenceTreeItem } from '../gistify/referencesView';
 import { UtilClasses } from './util';
 let request = require("request");
 
@@ -38,6 +39,10 @@ export module Pastebin {
                 return new Reference(json['link']);
             }
             return null;
+        }
+
+        public getReferenceTreeItem() : ReferenceTreeItem | null {
+            return new ReferenceTreeItem('Pastebin Ref', this.getLink());
         }
 
     }

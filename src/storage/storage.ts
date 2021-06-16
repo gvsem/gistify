@@ -21,7 +21,7 @@ export class Storage {
 
     private service: string;
 
-    public constructor(service : 'pastebin' | 'gists') {
+    public constructor(service : UtilClasses.Services) {
         this.service = service;
     }
 
@@ -51,8 +51,9 @@ export class Storage {
             var m : UtilClasses.Reference | null = null;
             if (this.service === 'pastebin') {
                 m = Pastebin.Reference.fromJSONObject(s[document.uri.path][this.service][k]);
-            } else {
-                //m = Gists.Reference.fromJSONObject(s[document.uri.path][this.service][k]);
+            } 
+            if (this.service === 'gists') {
+                m = Gists.Reference.fromJSONObject(s[document.uri.path][this.service][k]);
             }
             if (m !== null) {
                 r.push(m);
@@ -79,7 +80,9 @@ export class Storage {
 
     private updateStorage(value : any) {
         var s = JSON.stringify(value);
-        this.getConfiguration().update("storage", s, vscode.ConfigurationTarget.Workspace).then(undefined, (e) => {
+        this.getConfiguration().update("storage", s, vscode.ConfigurationTarget.Workspace).then(() => {
+            vscode.commands.executeCommand('gistify.service.refreshReferenceTable');
+        }, (e) => {
             throw new Error("Could not update configuration for Workspace.");
         });
     }

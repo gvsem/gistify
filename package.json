@@ -52,10 +52,45 @@
 		},
 		"commands": [
 			{
-				"command": "gistify.helloWorld",
-				"title": "Hello World"
+				"command": "gistify.publish",
+				"title": "Publish snippet to bin..."
+			},
+			{
+				"command": "gistify.references",
+				"title": "Show published references of this snippet."
+			},
+			{
+				"command": "gistify.service.refreshReferenceTable",
+				"title": "Refresh",
+				"icon": "$(refresh)"
 			}
-		]
+		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "nodeReferencesView",
+					"title": "Gistify",
+					"icon": "$(gist)"
+				}
+			]
+		},
+		"views": {
+			"nodeReferencesView": [
+				{
+					"id": "nodeReferences",
+					"name": "Snippet References"
+				}
+			]
+		},
+		"menus": {
+			"view/title": [
+				{
+					"command": "gistify.service.refreshReferenceTable",
+					"when": "view == nodeReferences",
+					"group": "navigation"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
@@ -80,6 +115,7 @@
 	},
 	"dependencies": {
 		"github-api": "^3.4.0",
+		"opn": "^6.0.0",
 		"request": "^2.88.2"
 	}
 }
