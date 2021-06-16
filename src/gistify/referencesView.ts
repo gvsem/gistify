@@ -1,9 +1,6 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs';
 import * as path from 'path';
-import { Gistify } from './gistify';
 import { UtilClasses } from '../clients/util';
-import { Client } from '../clients/client';
 import { Storage } from '../storage/storage';
 
 export class NodeReferencesProvider implements vscode.TreeDataProvider<ReferenceNode> {
@@ -28,13 +25,11 @@ export class NodeReferencesProvider implements vscode.TreeDataProvider<Reference
             var treeView = Array<ReferenceNode>();
             treeView.push(new ServiceTreeItem(
                 'Pastebin',
-                '000',
                 'pastebin',
                 vscode.TreeItemCollapsibleState.Expanded
             ));
             treeView.push(new ServiceTreeItem(
                 'Gists',
-                '001',
                 'gists',
                 vscode.TreeItemCollapsibleState.Expanded
             ));
@@ -101,19 +96,13 @@ class ReferenceNode extends vscode.TreeItem {
 class ServiceTreeItem extends ReferenceNode {
     constructor(
       public readonly label: string,
-      private hint: string,
       private service: UtilClasses.Services,
       public readonly collapsibleState: vscode.TreeItemCollapsibleState
     ) {
       super(label, collapsibleState);
-      this.tooltip = `${this.label}-${this.hint}`;
-      this.description = this.hint;
     }
   
-    iconPath = {
-      light: path.join(__filename, '..', '..', 'resources', 'light', 'dependency.svg'),
-      dark: path.join(__filename, '..', '..', 'resources', 'dark', 'dependency.svg')
-    };
+    readonly iconPath = new vscode.ThemeIcon('folder');
 
     public getReferenceNodes(document : vscode.TextDocument) : Array<ReferenceTreeItem> {
         var r = Array<ReferenceTreeItem>();
@@ -130,17 +119,24 @@ class ServiceTreeItem extends ReferenceNode {
 
 export class ReferenceTreeItem extends ReferenceNode {
   constructor(
-    public readonly label: string,
-    private hint: string
+    private name: string,
+    private date: string,
+    private link: string
   ) {
-    super(label, vscode.TreeItemCollapsibleState.None);
-    this.tooltip = `${this.label}-${this.hint}`;
-    this.description = this.hint;
+    super(name, vscode.TreeItemCollapsibleState.None);
+    this.name = name;
+    this.date = date;
+    this.link = link;
+
+    this.description = date;
+    this.tooltip = `${this.name}\n${this.description}`;
   }
 
-  iconPath = {
-    light: path.join(__filename, '..', '..', 'resources', 'light', 'dependency.svg'),
-    dark: path.join(__filename, '..', '..', 'resources', 'dark', 'dependency.svg')
-  };
+  readonly contextValue = "ReferenceTreeItem";
+  readonly iconPath = new vscode.ThemeIcon('file-text');
+
+  public getLink(): string {
+    return this.link;
+  }
 
 }

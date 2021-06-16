@@ -8,11 +8,15 @@ export module Pastebin {
 
     export class Reference extends UtilClasses.Reference {
 
+        private name: string;
         private link: string;
+        private date: Date;
 
-        constructor(link: string) {
+        constructor(name: string, link: string, date?: Date) {
             super();
+            this.name = name;
             this.link = link;
+            this.date = date !== undefined ? date : new Date();
         }
 
         public getLink() : string {
@@ -30,20 +34,18 @@ export module Pastebin {
         public toJSONObject() : any {
             super.toJSONObject();
             var r = JSON.parse('{}');
+            r['name'] = this.name;
             r['link'] = this.getLink();
+            r['date'] = this.date.toJSON();
             return r;
         }
 
-        public static fromJSONObject(json : any) : Reference | null {
-            super.fromJSONObject(null);
-            if ((typeof json === 'object') && (typeof json['link'] === 'string')) {
-                return new Reference(json['link']);
-            }
-            return null;
+        public static fromJSONObject(json : any) : Reference {
+            return new Reference(json['name'], json['link'], new Date(json['date']));
         }
 
         public getReferenceTreeItem() : ReferenceTreeItem | null {
-            return new ReferenceTreeItem('Pastebin Ref', this.getLink());
+            return new ReferenceTreeItem(this.name, this.date.toJSON(), this.getLink());
         }
 
     }
@@ -112,7 +114,7 @@ export module Pastebin {
             return new Promise<Reference>((resolve, reject) => {
                 Client.callPostMethod('api_post.php', data).then(
                     body => {
-                        resolve(new Reference(body));
+                        resolve(new Reference(snippet.getName(), body, new Date()));
                     }
                 ).catch(e => reject(e));
             });
