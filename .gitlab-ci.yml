@@ -1,4 +1,5 @@
-image: node:12-alpine
+#image: node:12-alpine
+image: node:12-buster
 
 
 # build:
@@ -10,10 +11,12 @@ test:
     type: test
     script:
       - |
-        apt-get update
-        apt-get install -y libasound2 libgbm-dev libgtk-3-0 libnss3 xvfb
+        apt update
+        apt install -y libasound2 libgbm-dev libgtk-3-0 libnss3 xvfb
         xvfb-run -a npm run test
-        
+
+#image: node:12-alpine
+
 deploy:
     type: deploy
     before_script:
