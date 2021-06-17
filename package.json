@@ -5,6 +5,10 @@
 	"license": "MIT",
 	"publisher": "GistifyAB",
 	"version": "0.3.0",
+	"repository": {
+		"type": "git",
+		"url": "https://gitlab.com/MrGeorgeous/gistify.git"
+	},
 	"engines": {
 		"vscode": "^1.56.0"
 	},
