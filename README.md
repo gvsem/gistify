@@ -31,7 +31,7 @@ Track your snippets in a convinient way:
 
 ## Known Issues
 
-Contact us at [our issue email](incoming+mrgeorgeous-gistify-27337429-issue-@incoming.gitlab.com) if you have encountered any problems.
+Contact us at [our issue email](mailto:incoming+mrgeorgeous-gistify-27337429-issue-@incoming.gitlab.com) if you have encountered any problems.
 
 ## Release Notes
 
