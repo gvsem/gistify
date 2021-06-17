@@ -1,9 +1,8 @@
 # Change Log
 
-All notable changes to the "gistify" extension will be documented in this file.
+### 1.0.0
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-
-- Initial release
+Initial release of Gistify.
+* Upload snippets at Pastebin and Gists (Ctrl+Alt+U)
+* Upload selections using RBM in editor
+* Track uploaded snippets in View

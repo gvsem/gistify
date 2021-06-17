@@ -2,7 +2,9 @@
 	"name": "gistify",
 	"displayName": "Gistify",
 	"description": "",
-	"version": "0.2.0",
+	"license": "MIT",
+	"publisher": "GistifyAB",
+	"version": "0.3.0",
 	"engines": {
 		"vscode": "^1.56.0"
 	},
@@ -169,7 +171,8 @@
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile && npm run lint",
 		"lint": "eslint src --ext ts",
-		"test": "node ./out/test/runTest.js"
+		"test": "node ./out/test/runTest.js",
+		"deploy": "vsce publish"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.3",
