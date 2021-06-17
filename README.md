@@ -1,7 +1,11 @@
+
+![logo](logo256.png)
 # Gistify 1.0
 
 We greet you, strangers outside ITMO University!
 Today we present an amazing and powerful tool to manage your snippets at Pastebin and Github Gists in your Visual Studio Code.
+
+Brought to you with :heart: from [MrGeorgeous](https://gitlab.com/MrGeorgeous) & [jvstme](https://gitlab.com/jvstme)
 
 ## Requirements
 

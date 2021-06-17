@@ -9,6 +9,7 @@
 		"type": "git",
 		"url": "https://gitlab.com/MrGeorgeous/gistify.git"
 	},
+	"icon": "logo256.png",
 	"engines": {
 		"vscode": "^1.56.0"
 	},

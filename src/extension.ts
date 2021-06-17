@@ -1,14 +1,8 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { UtilClasses } from './clients/util';
-import { Client } from './clients/client';
-import { Pastebin } from './clients/pastebin';
-import { Gists } from './clients/gists';
-import { Storage } from './storage/storage';
 import { Gistify } from './gistify/gistify';
 import { NodeReferencesProvider, ReferenceTreeItem } from './gistify/referencesView';
-import { getVSCodeDownloadUrl } from 'vscode-test/out/util';
 import { Linkable } from './util';
 let opn = require('opn');
 
