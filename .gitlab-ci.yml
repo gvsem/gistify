@@ -7,6 +7,9 @@ image: node:12-buster
 #     script:
 #         - npm install
 
+before_script:
+  - npm install
+  
 test:
     type: test
     script:
