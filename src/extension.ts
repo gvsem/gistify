@@ -9,6 +9,7 @@ import { Storage } from './storage/storage';
 import { Gistify } from './gistify/gistify';
 import { NodeReferencesProvider, ReferenceTreeItem } from './gistify/referencesView';
 import { getVSCodeDownloadUrl } from 'vscode-test/out/util';
+import { Linkable } from './util';
 let opn = require('opn');
 
 
@@ -176,14 +177,14 @@ export function activate(context: vscode.ExtensionContext) {
 
 	let openReferenceTreeItemCommand = vscode.commands.registerCommand(
 		'gistify.service.openReferenceTreeItem',
-		(item: ReferenceTreeItem) => opn(item.getLink())
+		(item: Linkable) => opn(item.getLink())
 	);
 
 	context.subscriptions.push(openReferenceTreeItemCommand);
 
 	let copyReferenceTreeItemLink = vscode.commands.registerCommand(
 		'gistify.service.copyReferenceTreeItemLink',
-		(item: ReferenceTreeItem) => {
+		(item: Linkable) => {
 			vscode.env.clipboard.writeText(item.getLink());
 			vscode.window.showInformationMessage("Link copied to clipboard.");
 		}

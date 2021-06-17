@@ -4,6 +4,7 @@ import { Storage } from '../storage/storage';
 import { Pastebin } from '../clients/pastebin';
 import { Gists } from '../clients/gists';
 import moment = require('moment');
+import { Linkable } from '../util';
 
 export class NodeReferencesProvider implements vscode.TreeDataProvider<ReferenceNode> {
   constructor() {}
@@ -96,7 +97,7 @@ class ServiceTreeItem extends ReferenceNode {
   
 }
 
-export class ReferenceTreeItem extends ReferenceNode {
+export class ReferenceTreeItem extends ReferenceNode implements Linkable {
   constructor(
     private name: string,
     private date: Date,

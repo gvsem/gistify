@@ -67,9 +67,14 @@ export module Gistify {
                     }
 
                     client.upload(snippet!, privacy, expire).then((reference : Pastebin.Reference) => {
-                        vscode.window.showInformationMessage("File/selection has been published at " + reference.getLink(), ...["Open link..."]).then((value : string | undefined) => {
-                            if (value === "Open link...") {
-                                opn(reference.getLink());
+                        vscode.window.showInformationMessage(
+                            "File/selection has been published at " + reference.getLink(),
+                            ...["Copy link", "Open link"]
+                        ).then((value : string | undefined) => {
+                            if (value === "Open link") {
+                                vscode.commands.executeCommand('gistify.service.openReferenceTreeItem', reference);
+                            } else if (value === "Copy link") {
+                                vscode.commands.executeCommand('gistify.service.copyReferenceTreeItemLink', reference);
                             }
                         });
                         if (snippet!.getIsFile() && !document.isUntitled && !preferSelection) {
@@ -110,9 +115,14 @@ export module Gistify {
                 Client.getGistsClient().then((client : Gists.Client) => {
 
                     client.upload(snippet!, privacy, description).then((reference : Gists.Reference) => {
-                        vscode.window.showInformationMessage("File/selection has been published at " + reference.getLink(), ...["Open link..."]).then((value : string | undefined) => {
-                            if (value === "Open link...") {
-                                opn(reference.getLink());
+                        vscode.window.showInformationMessage(
+                            "File/selection has been published at " + reference.getLink(),
+                            ...["Copy link", "Open link"]
+                        ).then((value : string | undefined) => {
+                            if (value === "Open link") {
+                                vscode.commands.executeCommand('gistify.service.openReferenceTreeItem', reference);
+                            } else if (value === "Copy link") {
+                                vscode.commands.executeCommand('gistify.service.copyReferenceTreeItemLink', reference);
                             }
                         });
                         if (snippet!.getIsFile() && !document.isUntitled && !preferSelection) {

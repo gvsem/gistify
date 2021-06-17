@@ -1,11 +1,12 @@
 import * as vscode from 'vscode';
 import {ReferenceTreeItem} from '../gistify/referencesView';
+import { Linkable } from '../util';
 
 export module UtilClasses {
 
     export type Services = 'pastebin' | 'gists';
 
-    export abstract class Reference {
+    export abstract class Reference implements Linkable {
 
         public toJSONObject() : any {
     
@@ -18,6 +19,8 @@ export module UtilClasses {
         public getReferenceTreeItem() : ReferenceTreeItem | null {
             return null;
         }
+
+        abstract getLink() : string;
     
     };
 
