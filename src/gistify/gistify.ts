@@ -72,7 +72,7 @@ export module Gistify {
                                 opn(reference.getLink());
                             }
                         });
-                        if (snippet!.getIsFile() && !document.isUntitled) {
+                        if (snippet!.getIsFile() && !document.isUntitled && !preferSelection) {
                             new Storage('pastebin').addReference(document, reference);
                         } else {
                             vscode.window.showWarningMessage("Publihed snippet is not tracked.\nUnknown, unworkspaced files and selections can not be tracked.", "OK");
@@ -115,7 +115,7 @@ export module Gistify {
                                 opn(reference.getLink());
                             }
                         });
-                        if (snippet!.getIsFile() && !document.isUntitled) {
+                        if (snippet!.getIsFile() && !document.isUntitled && !preferSelection) {
                             new Storage('gists').addReference(document, reference);
                         } else {
                             vscode.window.showWarningMessage("Publihed snippet is not tracked.\nUnknown, unworkspaced files and selections can not be tracked.", "OK");
@@ -251,7 +251,7 @@ export module Gistify {
             vscode.window.showQuickPick(pasteBinExpire, {title: "Specify Pastebin expire date:"}).then((selection: vscode.QuickPickItem | undefined) => {
                 if (selection !== undefined) {
                     var exp = selection.label as Pastebin.ExpireDate;
-                    Gistify.Publish.toPastebin(d!, wholeFile, anonymous, privacy, exp);
+                    Gistify.Publish.toPastebin(d!, !wholeFile, anonymous, privacy, exp);
                 }
             });
         });
@@ -292,7 +292,7 @@ export module Gistify {
             }
             vscode.window.showInputBox({title: "Optionally: specify description for this gist."}).then((description: string | undefined) => {
                 if (description !== undefined) {
-                    Gistify.Publish.toGists(d!, wholeFile, (privacy === 0 ? Gists.Privacy.public : Gists.Privacy.private), description!);
+                    Gistify.Publish.toGists(d!, !wholeFile, (privacy === 0 ? Gists.Privacy.public : Gists.Privacy.private), description!);
                 }
             });
         });
