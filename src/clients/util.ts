@@ -1,11 +1,12 @@
 import * as vscode from 'vscode';
 import {ReferenceTreeItem} from '../gistify/referencesView';
+import { Linkable } from '../util';
 
 export module UtilClasses {
 
     export type Services = 'pastebin' | 'gists';
 
-    export abstract class Reference {
+    export abstract class Reference implements Linkable {
 
         public toJSONObject() : any {
     
@@ -18,6 +19,8 @@ export module UtilClasses {
         public getReferenceTreeItem() : ReferenceTreeItem | null {
             return null;
         }
+
+        abstract getLink() : string;
     
     };
 
@@ -49,6 +52,7 @@ export module UtilClasses {
             console.log("Code format: " + this.format);
             console.log("Data length: " + this.data.length);
             console.log("Is related to file: " + this.isFile);
+
             if (this.isFile) {
                 console.log("Related filename: " + this.filename);
             }
@@ -74,6 +78,7 @@ export module UtilClasses {
             if (this.isFile) {
                 return this.filename;
             }
+
             return null;
         }
 
@@ -99,6 +104,7 @@ export module UtilClasses {
         }
         
         let selection: vscode.Selection = vscode.window.activeTextEditor.selection;
+
         if (selection.isEmpty) {
             return snippetFromCurrentFile(document);
         }
@@ -124,14 +130,3 @@ export module UtilClasses {
     }
 
 }
-
-
-/*
-EXAMPLE USAGE
-
-import { UtilClasses } from './clients/util';
-
-let snippet = UtilClasses.snippetFromCurrentSelection()
-snippet.print()
-
-*/

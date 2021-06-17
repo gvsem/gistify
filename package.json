@@ -1,14 +1,15 @@
 {
 	"name": "gistify",
 	"displayName": "Gistify",
-	"description": "",
+	"description": "Upload your snippets to Pastebin & GitHub Gists quickly.",
 	"license": "MIT",
 	"publisher": "GistifyAB",
-	"version": "0.3.0",
+	"version": "1.0.0",
 	"repository": {
 		"type": "git",
 		"url": "https://gitlab.com/MrGeorgeous/gistify.git"
 	},
+	"icon": "logo256.png",
 	"engines": {
 		"vscode": "^1.56.0"
 	},

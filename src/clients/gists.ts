@@ -1,7 +1,7 @@
 import { GistsReferenceTreeItem, ReferenceTreeItem } from '../gistify/referencesView';
 import { Pastebin } from './pastebin';
 import { UtilClasses } from './util';
-var GitHub = require('github-api');
+const gitHub = require('github-api');
 
 export module Gists {
 
@@ -26,17 +26,9 @@ export module Gists {
             return this.link;
         }
 
-        // public getId() : string {
-        //     var s = this.link.split('/').pop();
-        //     if (s !== undefined) {
-        //         return s;
-        //     }
-        //     throw new Error("Reference is initialized with wrong link.");
-        // }
-
         public toJSONObject() : any {
             super.toJSONObject();
-            var r = JSON.parse('{}');
+            let r = JSON.parse('{}');
             r['name'] = this.name;
             r['link'] = this.getLink();
             r['date'] = this.date.toJSON();
@@ -46,11 +38,9 @@ export module Gists {
         }
 
         public static fromJSONObject(json : any) : Reference | null {
-            super.fromJSONObject(null);
-            if ((typeof json === 'object') && (typeof json['link'] === 'string')) {
-                return new Gists.Reference(json['name'], json['link'], new Date(json['date']), json['privacy'], json['description']);
-            }
-            return null;
+            return new Gists.Reference(
+                json['name'], json['link'], new Date(json['date']), json['privacy'], json['description']
+            );
         }
 
         public getReferenceTreeItem() : ReferenceTreeItem | null {
@@ -66,19 +56,18 @@ export module Gists {
 
     export class Client {
     
-        private client: typeof GitHub;
+        private client: typeof gitHub;
 
-        constructor(client : typeof GitHub) {
+        constructor(client : typeof gitHub) {
             this.client = client;
         }
-
 
         public upload(snippet : UtilClasses.Snippet, privacy : Gists.Privacy, description : string) : Promise<Reference> {
             return new Promise<Reference>((resolve, reject) => {
 
                 let gist = this.client.getGist();
 
-                var data = {
+                let data = {
                     public: (privacy === Gists.Privacy.public),
                     description: description,
                     files: {
@@ -90,13 +79,17 @@ export module Gists {
 
                 gist.create(data).then((data: string) => {
                     return gist.read();
+                    
                 }).then((data: any) => {
-                    console.log(data);
+
                     if (data['status'] === 200) {
-                        resolve(new Gists.Reference(snippet.getName(), data['data']['html_url'], new Date(), privacy, description));
+                        resolve(new Gists.Reference(
+                            snippet.getName(), data['data']['html_url'], new Date(), privacy, description
+                        ));
                     } else {
                         reject(new Error(data['statusText'] + " / " + data["data"]));
                     }
+
                 }).catch((e: any) => {
                     reject(e);
                 });

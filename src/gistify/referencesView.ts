@@ -4,9 +4,10 @@ import { Storage } from '../storage/storage';
 import { Pastebin } from '../clients/pastebin';
 import { Gists } from '../clients/gists';
 import moment = require('moment');
+import { Linkable } from '../util';
 
 export class NodeReferencesProvider implements vscode.TreeDataProvider<ReferenceNode> {
-  constructor() {}
+  constructor() { }
 
   getTreeItem(element: ReferenceNode): vscode.TreeItem {
     return element;
@@ -16,40 +17,40 @@ export class NodeReferencesProvider implements vscode.TreeDataProvider<Reference
 
     return new Promise((accept) => {
 
+      let editor = vscode.window.activeTextEditor;
 
-
-        let editor = vscode.window.activeTextEditor;
-        if (editor === undefined) {
-            accept([]);
-            return;
-        }
-        let d = editor.document;
-
-        if (element === undefined) {
-            var treeView = Array<ServiceTreeItem>();
-            treeView.push(new ServiceTreeItem(
-                'Pastebin',
-                'pastebin',
-                vscode.TreeItemCollapsibleState.Expanded
-            ));
-            treeView.push(new ServiceTreeItem(
-                'Gists',
-                'gists',
-                vscode.TreeItemCollapsibleState.Expanded
-            ));
-            if ((treeView[0].getReferenceNodes(d).length === 0) && (treeView[1].getReferenceNodes(d).length === 0)) {
-              accept([]);
-              return;
-            }
-            accept(treeView);
-        }
-
-        if (element instanceof ServiceTreeItem) {
-            accept(element.getReferenceNodes(d));
-            return;
-        }
-
+      if (editor === undefined) {
+        accept([]);
         return;
+      }
+
+      let d = editor.document;
+
+      if (element === undefined) {
+        let treeView = Array<ServiceTreeItem>();
+        treeView.push(new ServiceTreeItem(
+          'Pastebin',
+          'pastebin',
+          vscode.TreeItemCollapsibleState.Expanded
+        ));
+        treeView.push(new ServiceTreeItem(
+          'Gists',
+          'gists',
+          vscode.TreeItemCollapsibleState.Expanded
+        ));
+        if ((treeView[0].getReferenceNodes(d).length === 0) && (treeView[1].getReferenceNodes(d).length === 0)) {
+          accept([]);
+          return;
+        }
+        accept(treeView);
+      }
+
+      if (element instanceof ServiceTreeItem) {
+        accept(element.getReferenceNodes(d));
+        return;
+      }
+
+      return;
 
     });
   }
@@ -62,7 +63,7 @@ export class NodeReferencesProvider implements vscode.TreeDataProvider<Reference
     this._onDidChangeTreeData.fire();
   }
 
-  
+
 }
 
 class ReferenceNode extends vscode.TreeItem {
@@ -70,33 +71,33 @@ class ReferenceNode extends vscode.TreeItem {
 };
 
 class ServiceTreeItem extends ReferenceNode {
-    constructor(
-      public readonly label: string,
-      private service: UtilClasses.Services,
-      public readonly collapsibleState: vscode.TreeItemCollapsibleState
-    ) {
-      super(label, collapsibleState);
-    }
-  
-    readonly iconPath = new vscode.ThemeIcon('folder');
+  constructor(
+    public readonly label: string,
+    private service: UtilClasses.Services,
+    public readonly collapsibleState: vscode.TreeItemCollapsibleState
+  ) {
+    super(label, collapsibleState);
+  }
 
-    public getReferenceNodes(document : vscode.TextDocument) : Array<ReferenceTreeItem> {
-        var r = Array<ReferenceTreeItem>();
-        if (document.isUntitled) {
-            return r;
-        }
-        new Storage(this.service).getReferences(document).forEach((value, index) => {
-            var l = value.getReferenceTreeItem();
-            if (l !== null) {
-                r.push(l);
-            }
-        });
-        return r;
+  readonly iconPath = new vscode.ThemeIcon('folder');
+
+  public getReferenceNodes(document: vscode.TextDocument): Array<ReferenceTreeItem> {
+    let r = Array<ReferenceTreeItem>();
+    if (document.isUntitled) {
+      return r;
     }
-  
+    new Storage(this.service).getReferences(document).forEach((value, index) => {
+      var l = value.getReferenceTreeItem();
+      if (l !== null) {
+        r.push(l);
+      }
+    });
+    return r;
+  }
+
 }
 
-export class ReferenceTreeItem extends ReferenceNode {
+export class ReferenceTreeItem extends ReferenceNode implements Linkable {
   constructor(
     private name: string,
     private date: Date,
@@ -125,8 +126,8 @@ export class PastebinReferenceTreeItem extends ReferenceTreeItem {
     name: string,
     date: Date,
     link: string,
-    private privacy : Pastebin.Privacy,
-    private expire : Pastebin.ExpireDate
+    private privacy: Pastebin.Privacy,
+    private expire: Pastebin.ExpireDate
   ) {
     super(name, date, link);
     this.privacy = privacy;
@@ -158,8 +159,8 @@ export class GistsReferenceTreeItem extends ReferenceTreeItem {
     name: string,
     date: Date,
     link: string,
-    private privacy : Gists.Privacy,
-    private descriptionSnippet : string
+    private privacy: Gists.Privacy,
+    private descriptionSnippet: string
   ) {
     super(name, date, link);
     this.privacy = privacy;
