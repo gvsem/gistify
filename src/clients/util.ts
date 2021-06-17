@@ -52,6 +52,7 @@ export module UtilClasses {
             console.log("Code format: " + this.format);
             console.log("Data length: " + this.data.length);
             console.log("Is related to file: " + this.isFile);
+
             if (this.isFile) {
                 console.log("Related filename: " + this.filename);
             }
@@ -77,6 +78,7 @@ export module UtilClasses {
             if (this.isFile) {
                 return this.filename;
             }
+
             return null;
         }
 
@@ -102,6 +104,7 @@ export module UtilClasses {
         }
         
         let selection: vscode.Selection = vscode.window.activeTextEditor.selection;
+
         if (selection.isEmpty) {
             return snippetFromCurrentFile(document);
         }
@@ -127,14 +130,3 @@ export module UtilClasses {
     }
 
 }
-
-
-/*
-EXAMPLE USAGE
-
-import { UtilClasses } from './clients/util';
-
-let snippet = UtilClasses.snippetFromCurrentSelection()
-snippet.print()
-
-*/
