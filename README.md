@@ -1,5 +1,5 @@
 
-![logo](logo256.png)
+![logo](logo256.png)![header](images/gistify.png)
 # Gistify 1.0
 
 We greet you, strangers outside ITMO University!
