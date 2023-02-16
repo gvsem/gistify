@@ -1,5 +1,6 @@
 
-![logo](logo256.png)![header](images/gistify.png)
+<img src="logo256.png" height="220px"><img src="images/gistify.png" height="220px">
+
 # Gistify 1.0
 
 We greet you, strangers outside ITMO University!
