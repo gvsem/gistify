@@ -32,22 +32,24 @@ You can do selections and publish them:
 
 ![RMB usage](images/editor_context_menu.jpg)
 
-Track your snippets in a convinient way:
+Track your snippets in a convenient way:
 
 ![RMB usage](images/tracker.jpg)
 
 > Notice: you can not track several types of files. ![RMB usage](images/tracker_warning.jpg)
 
-
 -----------------------------------------------------------------------------------------------------------
 
 ## Known Issues
 
-Contact us at [our issue email](mailto:incoming+mrgeorgeous-gistify-27337429-issue-@incoming.gitlab.com) if you have encountered any problems.
+Visit our [Issues](https://github.com/gvsem/gistify/issues) to submit any detected problem.
 
 ## Release Notes
 
-We are not magicians, we are still students.
+### Requested features
+
+* OAuth authorization with GitHub
+* Disable manuak app token generation
 
 ### 1.0.0
 
@@ -55,5 +57,3 @@ Initial release of Gistify.
 * Upload snippets at Pastebin and Gists (Ctrl+Alt+U)
 * Upload selections using RBM in editor
 * Track uploaded snippets in View
-
-
