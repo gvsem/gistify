@@ -1,10 +1,9 @@
 
 <img src="logo256.png" height="220px"><img src="images/gistify.png" height="220px">
 
-## Gistify &nbsp; ![](https://vsmarketplacebadges.dev/version-short/GistifyAB.gistify.svg) ![](https://vsmarketplacebadges.dev/installs-short/GistifyAB.gistify.svg) ![](https://vsmarketplacebadges.dev/trending-monthly/GistifyAB.gistify.svg) ![license](https://img.shields.io/badge/license-MIT-blue)
+## Gistify &nbsp; ![](https://vsmarketplacebadges.dev/version-short/GistifyAB.gistify.svg) ![](https://vsmarketplacebadges.dev/installs-short/GistifyAB.gistify.svg) ![](https://vsmarketplacebadges.dev/trending-monthly/GistifyAB.gistify.svg) ![license](https://img.shields.io/badge/license-MIT-blue) [![Deploy Extension](https://github.com/gvsem/gistify/actions/workflows/master.yml/badge.svg)](https://github.com/gvsem/gistify/actions/workflows/master.yml)
 
 [![Visual Studio Code](https://img.shields.io/badge/Download%20for%20Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)](https://marketplace.visualstudio.com/items?itemName=GistifyAB.gistify)
-
 
 Reliable extension to upload snippets to GitHub Gists & Pastebin for Visual Studio Code. Created by [@gvsem](https://github.com/gvsem) and [@jvstme](https://github.com/jvstme)
 
