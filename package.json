@@ -1,7 +1,7 @@
 {
 	"name": "gistify",
 	"displayName": "Gistify",
-	"description": "Upload your snippets to Pastebin & GitHub Gists quickly.",
+	"description": "Upload your snippets to Pastebin and GitHub Gists easily.",
 	"license": "MIT",
 	"publisher": "GistifyAB",
 	"version": "1.0.0",
