@@ -7,7 +7,7 @@
 	"version": "1.0.0",
 	"repository": {
 		"type": "git",
-		"url": "https://gitlab.com/MrGeorgeous/gistify.git"
+		"url": "https://github.com/gvsem/gistify.git"
 	},
 	"icon": "logo256.png",
 	"engines": {
