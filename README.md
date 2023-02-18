@@ -5,7 +5,7 @@
 
 [![Visual Studio Code](https://img.shields.io/badge/Download%20for%20Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)](https://marketplace.visualstudio.com/items?itemName=GistifyAB.gistify)
 
-Reliable extension to upload snippets to GitHub Gists & Pastebin for Visual Studio Code. Created by [@gvsem](https://github.com/gvsem) and [@jvstme](https://github.com/jvstme)
+Reliable extension to upload snippets to GitHub Gists and Pastebin for Visual Studio Code. Created by [@gvsem](https://github.com/gvsem) and [@jvstme](https://github.com/jvstme)
 
 ## Configuration
 
