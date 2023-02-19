@@ -48,7 +48,7 @@ Visit our [Issues](https://github.com/gvsem/gistify/issues) to submit any detect
 ### Requested features
 
 * OAuth authorization with GitHub
-* Disable manuak app token generation
+* Disable manual app token generation
 
 ### 1.0.1
 
