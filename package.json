@@ -4,7 +4,7 @@
 	"description": "Upload your snippets to Pastebin and GitHub Gists easily.",
 	"license": "MIT",
 	"publisher": "GistifyAB",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/gvsem/gistify.git"
