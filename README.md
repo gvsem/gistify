@@ -50,6 +50,10 @@ Visit our [Issues](https://github.com/gvsem/gistify/issues) to submit any detect
 * OAuth authorization with GitHub
 * Disable manuak app token generation
 
+### 1.0.1
+
+Design fixes & CI/CD updates
+
 ### 1.0.0
 
 Initial release of Gistify.
